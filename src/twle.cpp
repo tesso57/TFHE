@@ -37,26 +37,26 @@ unsigned int decrypto(unsigned int b, std::array<unsigned int, N> a, std::array<
     return b;
 }
 
-void twle(unsigned int m, std::array<unsigned int, N> a, std::array<bool, N> s)
-{
-    //暗号文
-    unsigned int b;
-    //誤差
-    unsigned int e = torus_modular_normal_dist_val();
-    std::cout << "plaintext : " << m << std::endl;
-    b = m + e;
-    for (int i = 0; i < N; i++)
-        b += a[i] * s[i];
+// void twle(unsigned int m, std::array<unsigned int, N> a, std::array<bool, N> s)
+// {
+//     //暗号文
+//     unsigned int b;
+//     //誤差
+//     unsigned int e = torus_modular_normal_dist_val();
+//     std::cout << "plaintext : " << m << std::endl;
+//     b = m + e;
+//     for (int i = 0; i < N; i++)
+//         b += a[i] * s[i];
 
-    //暗号文の表示
-    std::cout << "ciphertext : " << b << std::endl;
+//     //暗号文の表示
+//     std::cout << "ciphertext : " << b << std::endl;
 
-    //decrypto
-    for (int i = 0; i < N; i++)
-        b -= a[i] * s[i];
+//     //decrypto
+//     for (int i = 0; i < N; i++)
+//         b -= a[i] * s[i];
 
-    std::cout << "deciphertext : " << b << std::endl;
-}
+//     std::cout << "deciphertext : " << b << std::endl;
+// }
 
 int main()
 {
