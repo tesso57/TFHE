@@ -20,7 +20,7 @@
 //     std::uniform_int_distribution<unsigned int> dist{0, std::numeric_limits<unsigned int>::max()};
 //     return dist(engine);
 // }
-
+/////
 // void encrypto(std::array<unsigned int, N> &b, std::array<unsigned int, N> m, std::array<unsigned int, N> a, std::array<bool, N> s)
 // {
 
