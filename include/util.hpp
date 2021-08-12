@@ -2,6 +2,7 @@
 #define HEADER_UTIL_
 #include <random>
 using torus = uint32_t;
+using secret_key = std::vector<bool>;
 
 template <class G>
 concept RandGen = std::uniform_random_bit_generator<G>;
