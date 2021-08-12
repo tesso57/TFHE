@@ -4,6 +4,9 @@ INC= -I ./include/
 SRCROOT = .
 SRCDIRS := $(shell find $(SRCROOT) -type d)
 SRCS=$(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.cpp))
+OBJS:=$(SRCS:.cpp=.o)
+main : $(OBJS)
+	$(CC) -o $@ $^
 
-main : $(SRCS)
-	$(CC) $(CXXFLAGS) -o $@ $(SRCS) $(INC)
+.cpp.o:
+	$(CC) $(CXXFLAGS) -c $< $(INC) -o $(<:.cpp=.o)

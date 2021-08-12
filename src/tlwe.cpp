@@ -4,11 +4,6 @@
 #include <vector>
 #include "util.hpp"
 
-std::random_device seed_gen;
-std::mt19937 engine(seed_gen());
-double alpha = 3.0517578125e-05;
-const unsigned int N = 630;
-
 struct tlwe
 {
     torus N;
@@ -27,7 +22,7 @@ struct tlwe
         tlwe instance(N);
         size_t i;
         for (torus &v : instance.a)
-            v = tourus_uniform_dist_val(engine);
+            v = torus_uniform_dist_val(engine);
 
         text += torus_modular_normal_dist_val(engine, alpha);
 
@@ -61,4 +56,13 @@ struct tlwe
 
 int main()
 {
+    std::random_device seed_gen;
+    std::mt19937 engine(seed_gen());
+    double alpha = 3.0517578125e-05;
+    const unsigned int N = 630;
+    secret_key key = std::vector<bool>(N);
+    std::binomial_distribution<unsigned int> dist;
+    for (size_t i = 0; i < N; i++)
+        key[i] = dist(engine);
+    torus m = torus_uniform_dist_val(engine);
 }
