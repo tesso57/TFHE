@@ -9,7 +9,6 @@ struct tlwe
     torus N;
     std::vector<torus> a;
     torus text;
-    template <RandGen RG>
     tlwe(torus N)
     {
         this->N = N;
@@ -17,15 +16,13 @@ struct tlwe
         this->a = std::vector<torus>(N);
     }
     template <RandGen RG>
-    static tlwe encrypto(torus text, secret_key &key, unsigned int N, torus alpha, RG &engine)
+    static tlwe encrypto(torus text, secret_key &key, unsigned int N, double alpha, RG &engine)
     {
-        tlwe instance(N);
+        tlwe instance = tlwe(N);
         size_t i;
         for (torus &v : instance.a)
             v = torus_uniform_dist_val(engine);
-
         text += torus_modular_normal_dist_val(engine, alpha);
-
         for (i = 0; i < N; i++)
             text += instance.a[i] * key[i];
 
@@ -65,4 +62,11 @@ int main()
     for (size_t i = 0; i < N; i++)
         key[i] = dist(engine);
     torus m = torus_uniform_dist_val(engine);
+    std::cout << "plaintext >>" << std::endl;
+    std::cout << m << std::endl;
+    tlwe t = tlwe::encrypto(m, key, N, alpha, engine);
+    std::cout << "ciphertext >>" << std::endl;
+    std::cout << t.text << std::endl;
+    std::cout << "deciphertext >>" << std::endl;
+    std::cout << t.decrypto(key) << std::endl;
 }
