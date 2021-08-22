@@ -1,7 +1,7 @@
-#ifndef HEADER_UTIL_
-#define HEADER_UTIL_
 #include <chrono>
 #include <cstdlib>
+#ifndef HEADER_TEST_
+#define HEADER_TEST_
 template <class Proc>
 inline auto timeit(Proc &&proc)
 {

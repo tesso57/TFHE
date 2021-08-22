@@ -18,3 +18,8 @@ test :
 .PHONY: clean
 clean :
 	rm $(OBJS)
+
+
+# TODO
+# test フォルダのファイルごとにテスト。
+# helpの追加
