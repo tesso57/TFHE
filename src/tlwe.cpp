@@ -26,10 +26,10 @@ tlwe tlwe::encrypto(torus text, secret_key &key, unsigned int N, double alpha, R
     return instance;
 }
 template <RandGen RG>
-tlwe tlwe::encrypto_bool(bool text, RG &engine, secret_key &key)
+tlwe tlwe::encrypto_bool(bool text, secret_key &key, unsigned int N, double alpha, RG &engine)
 {
     const torus mu = 1u << 29;
-    return encrypto(text ? mu : -mu, engine, key);
+    return encrypto(text ? mu : -mu, key, N, alpha, engine);
 }
 
 torus tlwe::decrypto(secret_key &key)
