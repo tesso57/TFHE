@@ -1,6 +1,4 @@
 #include <random>
-#include <math.h>
-#include <iostream>
 #include <array>
 #include "util.hpp"
 #include "tlwe.hpp"
