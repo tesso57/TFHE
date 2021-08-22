@@ -1,5 +1,6 @@
 #include "trgsw.hpp"
 
-trgsw::trgsw()
+template <class P>
+trgsw<P>::trgsw()
 {
 }

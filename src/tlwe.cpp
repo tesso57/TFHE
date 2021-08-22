@@ -1,7 +1,7 @@
 #include <random>
 #include <math.h>
 #include <iostream>
-#include <vector>
+#include <array>
 #include "util.hpp"
 #include "tlwe.hpp"
 #include "params.hpp"
@@ -12,39 +12,65 @@ template <class P, int level>
 tlwe<P, level>::tlwe()
 {
     this->text = 0;
-    this->a = std::vector<torus>(P::N);
 }
-template <RandGen RG, class P, int level>
-tlwe<P, level> tlwe<P, level>::encrypto(torus text, secret_key &key, RG &engine)
+
+template <class P, int level>
+constexpr size_t tlwe<P, level>::N()
 {
-    tlwe instance = tlwe(N);
+    if constexpr (level == 0)
+        return P::n;
+    else
+        return P::N;
+}
+
+template <class P, int level>
+std::array<torus, tlwe<P, level>::N()> tlwe<P, level>::select_key(secret_key<P> &key)
+{
+    if constexpr (level == 0)
+        return key.level0;
+    else
+        return key.level1;
+}
+
+template <class P, int level>
+template <RandGen RG>
+tlwe<P, level> tlwe<P, level>::encrypto(torus text, secret_key<P> &key, RG &engine)
+{
+    tlwe instance = tlwe<P, level>();
     size_t i;
+    std::array<torus, N()> &s = select_key(key);
     for (torus &v : instance.a)
         v = torus_uniform_dist_val(engine);
-    text += torus_modular_normal_dist_val(engine, alpha);
-    for (i = 0; i < N; i++)
-        text += instance.a[i] * key[i];
+    text += torus_modular_normal_dist_val(engine, P::alpha);
+    for (i = 0; i < P::N; i++)
+        text += instance.a[i] * s[i];
 
     instance.text = text;
     return instance;
 }
+
+template <class P, int level>
 template <RandGen RG>
-tlwe tlwe::encrypto_bool(bool text, secret_key &key, RG &engine)
+tlwe<P, level> tlwe<P, level>::encrypto_bool(bool text, secret_key<P> &key, RG &engine)
 {
     const torus mu = 1u << 29;
-    return encrypto(text ? mu : -mu, key, N, alpha, engine);
+    return encrypto(text ? mu : -mu, key, P::N, P::alpha, engine);
 }
 
-torus tlwe::decrypto(secret_key &key)
+template <class P, int level>
+torus tlwe<P, level>::decrypto(secret_key<P> &key)
 {
     torus deciphertext = this->text;
     size_t i;
-    for (i = 0; i < N; i++)
-        deciphertext -= a[i] * key[i];
+    std::array<torus, N()> &s = select_key(key);
+
+    for (i = 0; i < P::N; i++)
+        deciphertext -= a[i] * s[i];
     return deciphertext;
 }
 
-bool tlwe::decrypto_bool(secret_key &key)
+template <class P, int level>
+bool tlwe<P, level>::decrypto_bool(secret_key<P> &key)
 {
     return decrypto(key) > 0;
 }
