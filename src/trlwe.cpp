@@ -14,7 +14,7 @@ trlwe trlwe::encrypto(torus_poly text, secret_key &key, unsigned int N, double a
     trlwe instance = trlwe(N);
     size_t i, j;
     torus_poly _a = instance.a;
-    for (tours &v : _a)
+    for (torus &v : _a)
         v = torus_uniform_dist_val(engine);
     instance.a = _a;
     //TODO 多項式除算
@@ -26,6 +26,8 @@ trlwe trlwe::encrypto(torus_poly text, secret_key &key, unsigned int N, double a
                 text[i + j] -= _a[i] * key[i];
     for (i = 0; i < N; i++)
         text[i] += torus_modular_normal_dist_val(engine, alpha);
+
+    return instance;
 }
 
 template <RandGen RG>
@@ -35,7 +37,7 @@ trlwe trlwe::encrypto_bool(bool_poly text, secret_key &key, unsigned int N, doub
     torus_poly t;
     size_t i;
     for (i = 0; i < N; i++)
-        t[i] = m[i] ? mu : -mu;
+        t[i] = text[i] ? mu : -mu;
     return encrypto(t, key, N, alpha, engine);
 }
 
@@ -50,7 +52,9 @@ torus_poly trlwe::decrypto(secret_key &key)
                 deciphertext[i + j] -= a[i] * key[i];
             else
                 deciphertext[i + j] += a[i] * key[i];
+    return deciphertext;
 }
+
 bool_poly trlwe::decrypto_bool(secret_key &key)
 {
     torus_poly t = decrypto(key);
