@@ -4,15 +4,18 @@
 #include <vector>
 #include "util.hpp"
 #include "tlwe.hpp"
+#include "params.hpp"
+#include "key.hpp"
 
-tlwe::tlwe(torus N)
+// P : params
+template <class P, int level>
+tlwe<P, level>::tlwe()
 {
-    this->N = N;
     this->text = 0;
-    this->a = std::vector<torus>(N);
+    this->a = std::vector<torus>(P::N);
 }
-template <RandGen RG>
-tlwe tlwe::encrypto(torus text, secret_key &key, unsigned int N, double alpha, RG &engine)
+template <RandGen RG, class P, int level>
+tlwe<P, level> tlwe<P, level>::encrypto(torus text, secret_key &key, RG &engine)
 {
     tlwe instance = tlwe(N);
     size_t i;
@@ -26,7 +29,7 @@ tlwe tlwe::encrypto(torus text, secret_key &key, unsigned int N, double alpha, R
     return instance;
 }
 template <RandGen RG>
-tlwe tlwe::encrypto_bool(bool text, secret_key &key, unsigned int N, double alpha, RG &engine)
+tlwe tlwe::encrypto_bool(bool text, secret_key &key, RG &engine)
 {
     const torus mu = 1u << 29;
     return encrypto(text ? mu : -mu, key, N, alpha, engine);

@@ -1,66 +1,72 @@
+#include <array>
+#include <random>
 #include "util.hpp"
 #include "trlwe.hpp"
-
-trlwe::trlwe(unsigned int N)
+#include "key.hpp"
+template <class P>
+trlwe<P>::trlwe()
 {
-    this->N = N;
-    this->text = torus_poly(N);
-    this->a = torus_poly(N);
 }
 
+template <class P>
 template <RandGen RG>
-trlwe trlwe::encrypto(torus_poly text, secret_key &key, unsigned int N, double alpha, RG &engine)
+trlwe<P> trlwe<P>::encrypto(torus_poly<P> text, secret_key<P> &key, RG &engine)
 {
-    trlwe instance = trlwe(N);
+    trlwe<P> instance = trlwe<P>();
+    std::array<torus, P::N> &s = key.level1;
     size_t i, j;
     torus_poly _a = instance.a;
+
     for (torus &v : _a)
         v = torus_uniform_dist_val(engine);
     instance.a = _a;
     //TODO 多項式除算
-    for (i = 0; i < N; i++)
-        for (int j = 0; j < N; j++)
-            if (i + j < N)
-                text[i + j] += _a[i] * key[i];
+    for (i = 0; i < P::N; i++)
+        for (int j = 0; j < P::N; j++)
+            if (i + j < P::N)
+                text[i + j] += _a[i] * s[i];
             else
-                text[i + j] -= _a[i] * key[i];
-    for (i = 0; i < N; i++)
-        text[i] += torus_modular_normal_dist_val(engine, alpha);
+                text[i + j] -= _a[i] * s[i];
+    for (i = 0; i < P::N; i++)
+        text[i] += torus_modular_normal_dist_val(engine, P::alpha);
 
     return instance;
 }
 
+template <class P>
 template <RandGen RG>
-trlwe trlwe::encrypto_bool(bool_poly text, secret_key &key, unsigned int N, double alpha, RG &engine)
+trlwe<P> trlwe<P>::encrypto_bool(bool_poly<P> text, secret_key<P> &key, RG &engine)
 {
     const torus mu = 1u << 29;
-    torus_poly t;
+    torus_poly<P> t;
     size_t i;
-    for (i = 0; i < N; i++)
+    for (i = 0; i < P::N; i++)
         t[i] = text[i] ? mu : -mu;
-    return encrypto(t, key, N, alpha, engine);
+    return encrypto(t, key, P::N, P::alpha, engine);
 }
-
-torus_poly trlwe::decrypto(secret_key &key)
+template <class P>
+torus_poly<P> trlwe<P>::decrypto(secret_key<P> &key)
 {
-    torus_poly deciphertext = text;
+    torus_poly<P> deciphertext = text;
     size_t i, j;
+    std::array<torus, P::N> &s = key.level1;
     //TODO 多項式除算
-    for (i = 0; i < N; i++)
-        for (j = 0; j < N; j++)
-            if (i + j < N)
-                deciphertext[i + j] -= a[i] * key[i];
+    for (i = 0; i < P::N; i++)
+        for (j = 0; j < P::N; j++)
+            if (i + j < P::N)
+                deciphertext[i + j] -= a[i] * s[i];
             else
-                deciphertext[i + j] += a[i] * key[i];
+                deciphertext[i + j] += a[i] * s[i];
     return deciphertext;
 }
 
-bool_poly trlwe::decrypto_bool(secret_key &key)
+template <class P>
+bool_poly<P> trlwe<P>::decrypto_bool(secret_key<P> &key)
 {
-    torus_poly t = decrypto(key);
-    bool_poly deciphertext(this->N);
+    torus_poly<P> t = decrypto(key);
+    bool_poly<P> deciphertext;
     size_t i;
-    for (i = 0; i < N; i++)
+    for (i = 0; i < P::N; i++)
         deciphertext[i] = (t[i] > 0 ? true : false);
     return deciphertext;
 }

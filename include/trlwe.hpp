@@ -1,18 +1,20 @@
 #ifndef HEADER_TRLWE_
 #define HEADER_TRLWE_
+#include <array>
 #include "util.hpp"
-
+#include "key.hpp"
+//P : params
+template <class P>
 struct trlwe
 {
-    torus N;
-    torus_poly a;
-    torus_poly text;
-    trlwe(unsigned int N);
+    torus_poly<P> a;
+    torus_poly<P> text;
+    trlwe();
     template <RandGen RG>
-    static trlwe encrypto(torus_poly text, secret_key &key, unsigned int N, double alpha, RG &engine);
+    static trlwe encrypto(torus_poly<P> text, secret_key<P> &key, RG &engine);
     template <RandGen RG>
-    static trlwe encrypto_bool(bool_poly text, secret_key &key, unsigned int N, double alpha, RG &engine);
-    torus_poly decrypto(secret_key &key);
-    bool_poly decrypto_bool(secret_key &key);
+    static trlwe encrypto_bool(bool_poly<P> text, secret_key<P> &key, RG &engine);
+    torus_poly<P> decrypto(secret_key<P> &key);
+    bool_poly<P> decrypto_bool(secret_key<P> &key);
 };
 #endif

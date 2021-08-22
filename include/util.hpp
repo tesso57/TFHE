@@ -1,10 +1,15 @@
 #ifndef HEADER_UTIL_
 #define HEADER_UTIL_
 #include <random>
+#include <array>
+#include <params.hpp>
 using torus = uint32_t;
-using secret_key = std::vector<bool>;
-using torus_poly = std::vector<torus>;
-using bool_poly = std::vector<bool>;
+template <class P>
+using torus_poly = std::array<torus, P::N>;
+template <class P>
+using bool_poly = std::array<bool, P::N>;
+template <class P>
+using poly = std::array<int, P::N>;
 
 template <class G>
 concept RandGen = std::uniform_random_bit_generator<G>;
