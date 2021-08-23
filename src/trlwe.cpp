@@ -26,7 +26,7 @@ trlwe<P> trlwe<P>::encrypto(torus_poly<P> text, secret_key<P> &key, RG &engine)
             if (i + j < P::N)
                 text[i + j] += _a[i] * s[i];
             else
-                text[i + j] -= _a[i] * s[i];
+                text[i + j - P::N] -= _a[i] * s[i];
     for (i = 0; i < P::N; i++)
         text[i] += torus_modular_normal_dist_val(engine, P::alpha);
 
@@ -66,7 +66,7 @@ torus_poly<P> trlwe<P>::decrypto(secret_key<P> &key)
             if (i + j < P::N)
                 deciphertext[i + j] -= a[i] * s[i];
             else
-                deciphertext[i + j] += a[i] * s[i];
+                deciphertext[i + j - P::N] += a[i] * s[i];
     return deciphertext;
 }
 
@@ -79,4 +79,32 @@ bool_poly<P> trlwe<P>::decrypto_bool(secret_key<P> &key)
     for (i = 0; i < P::N; i++)
         deciphertext[i] = (t[i] > 0 ? true : false);
     return deciphertext;
+}
+
+template <class P>
+std::array<torus_poly<P>, P::l> trlwe<P>::decompose(torus_poly<P> &a)
+{
+    torus Bg = P::Bg;
+    size_t l = P::l, N = P::N, Bgbit = P::Bgbit, i, j;
+    torus roundoffset = 1 << (32 - l * Bgbit - 1);
+    std::array<torus_poly<P>, P::l> a_hat, a_bar;
+    //TODO 高速化
+    for (i = 0; i < l; i++)
+        for (j = 0; j < N; j++)
+            a_hat[i][j] = (((a[j] + roundoffset) >> (32 - Bgbit * i)) & (Bg - 1));
+
+    for (i = l - 1; i >= 0; i--)
+        for (j = 0; j < N; j++)
+        {
+            if (a_hat[i][j] >= Bg / 2)
+            {
+                a_bar[i][j] = a_hat[i][j] - Bg;
+                a_hat[i - 1][j]++;
+            }
+            else
+            {
+                a_bar[i][j] = a_hat[i][j];
+            }
+        }
+    return a_bar;
 }

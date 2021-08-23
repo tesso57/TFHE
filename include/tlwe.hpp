@@ -1,11 +1,10 @@
+#pragma once
 
 #include "util.hpp"
 #include <random>
 #include <array>
 #include "key.hpp"
 
-#ifndef HEADER_TLWE_
-#define HEADER_TLWE_
 // P : params, level : TLWE level
 template <class P, int level>
 struct tlwe
@@ -23,4 +22,3 @@ struct tlwe
     torus decrypto(secret_key<P> &key);
     bool decrypto_bool(secret_key<P> &key);
 };
-#endif

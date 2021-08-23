@@ -24,3 +24,30 @@ trgsw<P> trgsw<P>::encrypto(poly<P> mu, secret_key<P> key, RG &engine)
 
     return instance;
 }
+
+template <class P>
+trlwe<P> trgsw<P>::external_product(trgsw<P> C, trlwe<P> in)
+{
+    std::array<torus_poly<P>, P::l> dec_a, dec_text;
+    dec_a = trlwe<P>::decompose(in.a);
+    dec_text = trlwe<P>::decompose(in.text);
+    trlwe<P> instance;
+    size_t i, j;
+    torus_poly<P> tmp;
+    for (i = 0; i < P::l; i++)
+    {
+        poly_mult(tmp, dec_a[i], C.data[i].a);
+        for (j = 0; j < P::N; j++)
+            instance.a[j] += tmp[j];
+        poly_mult(tmp, dec_text[i], C.data[P::l + i].a);
+        for (j = 0; j < P::N; j++)
+            instance.a[j] += tmp[j];
+        poly_mult(tmp, dec_a[i], C.data[i].b);
+        for (j = 0; j < P::N; j++)
+            instance.b[j] += tmp[j];
+        poly_mult(tmp, dec_text[i], C.data[P::l + i].b);
+        for (j = 0; j < P::N; j++)
+            instance.b[j] += tmp[j];
+    }
+    return instance;
+}

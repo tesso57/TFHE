@@ -1,5 +1,5 @@
-#ifndef HEADER_TRLWE_
-#define HEADER_TRLWE_
+#pragma once
+
 #include <array>
 #include "util.hpp"
 #include "key.hpp"
@@ -18,5 +18,5 @@ struct trlwe
     static trlwe encrypto_zero(secret_key<P> &key, RG &engine);
     torus_poly<P> decrypto(secret_key<P> &key);
     bool_poly<P> decrypto_bool(secret_key<P> &key);
+    static std::array<torus_poly<P>, P::l> decompose(torus_poly<P> &a);
 };
-#endif

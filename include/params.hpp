@@ -1,6 +1,7 @@
+#pragma once
+
 #include <cstdint>
-#ifndef HEADER_PARAMS_
-#define HEADER_PARAMS_
+
 struct Test
 {
     //TLWE params
@@ -15,4 +16,3 @@ struct Test
     static constexpr uint32_t Bgbit = 6;
     static constexpr uint32_t Bg = 1 << Bgbit;
 };
-#endif

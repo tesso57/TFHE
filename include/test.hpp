@@ -1,7 +1,8 @@
+#pragma once
+
 #include <chrono>
 #include <cstdlib>
-#ifndef HEADER_TEST_
-#define HEADER_TEST_
+
 template <class Proc>
 inline auto timeit(Proc &&proc)
 {
@@ -26,5 +27,3 @@ inline void failwith(bool cond, const char *expr, unsigned long line)
     debug_log("\e[1;31mASSERTION FAILED! (L.", line, ") ", expr, "\e[0m");
     std::exit(1);
 }
-
-#endif
