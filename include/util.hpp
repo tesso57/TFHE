@@ -25,4 +25,31 @@ inline torus torus_uniform_dist_val(RG &engine)
     std::uniform_int_distribution<torus> dist{0, std::numeric_limits<torus>::max()};
     return dist(engine);
 }
+template <class P>
+inline std::array<torus_poly<P>, P::l> decompose(torus_poly<P> &a)
+{
+    torus Bg = P::Bg;
+    size_t l = P::l, N = P::N, Bgbit = P::Bgbit, i, j;
+    torus roundoffset = 1 << (32 - l * Bgbit - 1);
+    std::array<torus_poly<P>, P::l> a_hat, a_bar;
+    //TODO 高速化
+    for (i = 0; i < l; i++)
+        for (j = 0; j < N; j++)
+            a_hat[i][j] = (((a[j] + roundoffset) >> (32 - Bgbit * i)) & (Bg - 1));
+
+    for (i = l - 1; i >= 0; i--)
+        for (j = 0; j < N; j++)
+        {
+            if (a_hat[i][j] >= Bg / 2)
+            {
+                a_bar[i][j] = a_hat[i][j] - Bg;
+                a_hat[i - 1][j]++;
+            }
+            else
+            {
+                a_bar[i][j] = a_hat[i][j];
+            }
+        }
+    return a_bar;
+}
 #endif

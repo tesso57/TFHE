@@ -44,6 +44,16 @@ trlwe<P> trlwe<P>::encrypto_bool(bool_poly<P> text, secret_key<P> &key, RG &engi
         t[i] = text[i] ? mu : -mu;
     return encrypto(t, key, P::N, P::alpha, engine);
 }
+
+template <class P>
+template <RandGen RG>
+trlwe<P> trlwe<P>::encrypto_zero(secret_key<P> &key, RG &engine)
+{
+    //すべてが0の配列
+    torus_poly<P> m = {0};
+    return encrypto(m, key, engine);
+}
+
 template <class P>
 torus_poly<P> trlwe<P>::decrypto(secret_key<P> &key)
 {
