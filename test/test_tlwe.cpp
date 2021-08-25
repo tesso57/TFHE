@@ -1,4 +1,6 @@
 // そのうち
+#include <stdio.h>
+#include <stdlib.h>
 // TODO
 // int main()
 // {
@@ -19,3 +21,8 @@
 //     std::cout << "deciphertext >>" << std::endl;
 //     std::cout << t.decrypto(key) << std::endl;
 // }
+
+int main()
+{
+    exit(0);
+}
