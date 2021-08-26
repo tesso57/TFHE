@@ -5,16 +5,17 @@ SRCROOT:= ./src
 SRCDIRS := $(shell find $(SRCROOT) -type d)
 SRCS:=$(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.cpp))
 OBJS:=$(SRCS:.cpp=.o)
+OBJSDIR:=./obj
 TESTOBJS:=$(filter-out ./src/main.o,$(OBJS))
 TEST=test_tlwe
 .PHONY: all
 all : test main clean
 
 main : $(OBJS)
-	$(CC) -o $@.out $^
+	$(CC) -o $@.out $(addprefix $(OBJSDIR)/,$(notdir $^))
 
 .cpp.o:
-	$(CC) $(CXXFLAGS) -c $< $(INC) -o $(<:.cpp=.o)
+	$(CC) $(CXXFLAGS) -c $< $(INC) -o $(addprefix $(OBJSDIR)/,$(notdir $(<:.cpp=.o)))
 
 test : $(TESTOBJS) ./test/$(TEST).o
 	$(CC) -o $(TEST).out  $^
