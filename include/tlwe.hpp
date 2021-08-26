@@ -15,10 +15,8 @@ struct tlwe
     tlwe();
 
     static std::array<torus, tlwe<P, level>::N()> select_key(secret_key<P> &key);
-    template <RandGen RG>
-    static tlwe<P, level> encrypto(torus text, secret_key<P> &key, RG &engine);
-    template <RandGen RG>
-    static tlwe<P, level> encrypto_bool(bool text, secret_key<P> &key, RG &engine);
+    static tlwe<P, level> encrypto(torus text, secret_key<P> &key, std::random_device &engine);
+    static tlwe<P, level> encrypto_bool(bool text, secret_key<P> &key, std::random_device &engine);
     torus decrypto(secret_key<P> &key);
     bool decrypto_bool(secret_key<P> &key);
 };

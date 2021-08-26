@@ -1,6 +1,13 @@
 // そのうち
 #include <stdio.h>
 #include <stdlib.h>
+#include <random>
+#include <iostream>
+#include "params.hpp"
+#include "tlwe.hpp"
+#include "key.hpp"
+#include "util.hpp"
+using namespace std;
 // TODO
 // int main()
 // {
@@ -24,5 +31,7 @@
 
 int main()
 {
-    exit(0);
+    std::random_device engine;
+    using P = Test;
+    auto key = secret_key<P>(engine);
 }

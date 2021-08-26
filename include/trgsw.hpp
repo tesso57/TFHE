@@ -8,7 +8,6 @@ struct trgsw
 {
     std::array<trlwe<P>, P::l> data;
     trgsw();
-    template <RandGen RG>
-    static trgsw<P> encrypto(poly<P> mu, secret_key<P> key, RG &engine);
+    static trgsw<P> encrypto(poly<P> mu, secret_key<P> key, std::random_device &engine);
     static trlwe<P> external_product(trgsw<P> trgsw, trlwe<P> trlwe);
 };

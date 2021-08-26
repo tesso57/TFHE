@@ -31,8 +31,7 @@ std::array<torus, tlwe<P, level>::N()> tlwe<P, level>::select_key(secret_key<P> 
 }
 
 template <class P, int level>
-template <RandGen RG>
-tlwe<P, level> tlwe<P, level>::encrypto(torus text, secret_key<P> &key, RG &engine)
+tlwe<P, level> tlwe<P, level>::encrypto(torus text, secret_key<P> &key, std::random_device &engine)
 {
     tlwe instance = tlwe<P, level>();
     size_t i;
@@ -48,8 +47,7 @@ tlwe<P, level> tlwe<P, level>::encrypto(torus text, secret_key<P> &key, RG &engi
 }
 
 template <class P, int level>
-template <RandGen RG>
-tlwe<P, level> tlwe<P, level>::encrypto_bool(bool text, secret_key<P> &key, RG &engine)
+tlwe<P, level> tlwe<P, level>::encrypto_bool(bool text, secret_key<P> &key, std::random_device &engine)
 {
     const torus mu = 1u << 29;
     return encrypto(text ? mu : -mu, key, P::N, P::alpha, engine);

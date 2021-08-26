@@ -7,8 +7,7 @@ trgsw<P>::trgsw()
 }
 
 template <class P>
-template <RandGen RG>
-trgsw<P> trgsw<P>::encrypto(poly<P> mu, secret_key<P> key, RG &engine)
+trgsw<P> trgsw<P>::encrypto(poly<P> mu, secret_key<P> key, std::random_device &engine)
 {
     size_t N = P::N, l = P::l, Bgbit = P::Bgbit, i, j;
     trgsw<P> instance;

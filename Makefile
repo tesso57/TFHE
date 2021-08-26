@@ -8,10 +8,10 @@ OBJS:=$(SRCS:.cpp=.o)
 TESTOBJS:=$(filter-out ./src/main.o,$(OBJS))
 TEST=test_tlwe
 .PHONY: all
-all : main clean
+all : test main clean
 
 main : $(OBJS)
-	$(CC) -o $@ $^
+	$(CC) -o $@.out $^
 
 .cpp.o:
 	$(CC) $(CXXFLAGS) -c $< $(INC) -o $(<:.cpp=.o)
@@ -22,4 +22,4 @@ test : $(TESTOBJS) ./test/$(TEST).o
 
 .PHONY: clean
 clean :
-	rm $(OBJS).out
+	rm $(OBJS)
