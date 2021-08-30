@@ -18,8 +18,7 @@ main : $(OBJS)
 	$(CC) $(CXXFLAGS) -c $< $(INC) -o $(addprefix $(OBJSDIR)/,$(notdir $(<:.cpp=.o)))
 
 test : $(TESTOBJS) ./test/$(TEST).o
-	$(CC) -o $(TEST).out  $^
-	rm $^
+	$(CC) -o $(TEST).out  $(addprefix $(OBJSDIR)/,$(notdir $^))
 
 .PHONY: clean
 clean :

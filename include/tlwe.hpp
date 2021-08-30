@@ -9,7 +9,13 @@
 template <class P, int level>
 struct tlwe
 {
-    static constexpr size_t N();
+    static constexpr size_t N()
+    {
+        if constexpr (level == 0)
+            return P::n;
+        else
+            return P::N;
+    }
     std::array<torus, N()> a;
     torus text;
     tlwe();
@@ -20,3 +26,7 @@ struct tlwe
     torus decrypto(secret_key<P> &key);
     bool decrypto_bool(secret_key<P> &key);
 };
+template struct tlwe<CASE1, 0>;
+template struct tlwe<CASE1, 1>;
+template struct tlwe<Test, 0>;
+template struct tlwe<Test, 1>;

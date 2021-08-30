@@ -1,5 +1,6 @@
 #include <random>
 #include <array>
+#include <iostream>
 #include "util.hpp"
 #include "tlwe.hpp"
 #include "params.hpp"
@@ -10,15 +11,6 @@ template <class P, int level>
 tlwe<P, level>::tlwe()
 {
     this->text = 0;
-}
-
-template <class P, int level>
-constexpr size_t tlwe<P, level>::N()
-{
-    if constexpr (level == 0)
-        return P::n;
-    else
-        return P::N;
 }
 
 template <class P, int level>
@@ -34,13 +26,21 @@ template <class P, int level>
 tlwe<P, level> tlwe<P, level>::encrypto(torus text, secret_key<P> &key, std::random_device &engine)
 {
     tlwe instance = tlwe<P, level>();
-    size_t i;
-    std::array<torus, N()> &s = select_key(key);
-    for (torus &v : instance.a)
-        v = torus_uniform_dist_val(engine);
+    std::array<torus, N()> s = select_key(key);
     text += torus_modular_normal_dist_val(engine, P::alpha);
-    for (i = 0; i < P::N; i++)
-        text += instance.a[i] * s[i];
+
+    for (auto &v : instance.a)
+    {
+        v = torus_uniform_dist_val(engine);
+    }
+    auto it_a = instance.a.begin();
+    auto it_s = s.begin();
+    while (it_a != instance.a.end() && it_s != s.end())
+    {
+        text += (*it_a) * (*it_s);
+        it_s++;
+        it_a++;
+    }
 
     instance.text = text;
     return instance;
@@ -50,18 +50,23 @@ template <class P, int level>
 tlwe<P, level> tlwe<P, level>::encrypto_bool(bool text, secret_key<P> &key, std::random_device &engine)
 {
     const torus mu = 1u << 29;
-    return encrypto(text ? mu : -mu, key, P::N, P::alpha, engine);
+    return encrypto(text ? mu : -mu, key, engine);
 }
 
 template <class P, int level>
 torus tlwe<P, level>::decrypto(secret_key<P> &key)
 {
     torus deciphertext = this->text;
-    size_t i;
-    std::array<torus, N()> &s = select_key(key);
+    std::array<torus, N()> s = select_key(key);
+    auto it_a = a.begin();
+    auto it_s = s.begin();
+    while (it_a != a.end() && it_s != s.end())
+    {
+        deciphertext -= (*it_a) * (*it_s);
+        it_s++;
+        it_a++;
+    }
 
-    for (i = 0; i < P::N; i++)
-        deciphertext -= a[i] * s[i];
     return deciphertext;
 }
 

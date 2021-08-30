@@ -2,6 +2,7 @@
 #include <random>
 #include <array>
 #include "util.hpp"
+#include "params.hpp"
 template <class P>
 struct secret_key
 {
@@ -10,3 +11,5 @@ struct secret_key
     secret_key();
     secret_key(std::random_device &engine);
 };
+template struct secret_key<CASE1>;
+template struct secret_key<Test>;

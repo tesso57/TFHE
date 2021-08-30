@@ -16,3 +16,18 @@ struct Test
     static constexpr uint32_t Bgbit = 6;
     static constexpr uint32_t Bg = 1 << Bgbit;
 };
+
+struct CASE1
+{
+    //TLWE params
+    static constexpr uint32_t n = 635;
+    static constexpr double alpha = 3.0517578125e-05; // 2^(-15)
+    //TRLWE params
+    static constexpr uint32_t Nbit = 10;
+    static constexpr uint32_t N = 1 << Nbit;
+    //TRGSW params
+    static constexpr uint32_t l = 3;
+    static constexpr double alpha_bk = 0.0;
+    static constexpr uint32_t Bgbit = 6;
+    static constexpr uint32_t Bg = 1 << Bgbit;
+};
