@@ -3,7 +3,7 @@
 #include <array>
 #include "util.hpp"
 #include "key.hpp"
-//P : params
+#include "params.hpp"
 template <class P>
 struct trlwe
 {
@@ -17,3 +17,5 @@ struct trlwe
     bool_poly<P> decrypto_bool(secret_key<P> &key);
     static std::array<torus_poly<P>, P::l> decompose(torus_poly<P> &a);
 };
+
+template struct trlwe<Test>;

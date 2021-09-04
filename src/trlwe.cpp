@@ -6,6 +6,10 @@
 template <class P>
 trlwe<P>::trlwe()
 {
+    for (auto &v : this->text)
+    {
+        v = 0;
+    }
 }
 
 template <class P>
@@ -13,21 +17,21 @@ trlwe<P> trlwe<P>::encrypto(torus_poly<P> text, secret_key<P> &key, std::random_
 {
     trlwe<P> instance = trlwe<P>();
     std::array<torus, P::N> &s = key.level1;
-    size_t i, j;
-    torus_poly _a = instance.a;
 
-    for (torus &v : _a)
+    for (torus &v : instance.a)
         v = torus_uniform_dist_val(engine);
-    instance.a = _a;
-    //TODO 多項式除算
+    size_t i, j;
+    // TODO 多項式除算
     for (i = 0; i < P::N; i++)
-        for (int j = 0; j < P::N; j++)
+        for (j = 0; j < P::N; j++)
             if (i + j < P::N)
-                text[i + j] += _a[i] * s[i];
+                text[i + j] += instance.a[i] * s[i];
             else
-                text[i + j - P::N] -= _a[i] * s[i];
-    for (i = 0; i < P::N; i++)
-        text[i] += torus_modular_normal_dist_val(engine, P::alpha);
+                text[i + j - P::N] -= instance.a[i] * s[i];
+    // poly_mult<torus, torus, torus, P::N>(text, instance.a, s);
+    for (torus &v : text)
+        v += torus_modular_normal_dist_val(engine, P::alpha);
+    instance.text = text;
 
     return instance;
 }
@@ -40,7 +44,7 @@ trlwe<P> trlwe<P>::encrypto_bool(bool_poly<P> text, secret_key<P> &key, std::ran
     size_t i;
     for (i = 0; i < P::N; i++)
         t[i] = text[i] ? mu : -mu;
-    return encrypto(t, key, P::N, P::alpha, engine);
+    return encrypto(t, key, engine);
 }
 
 template <class P>
@@ -91,6 +95,7 @@ std::array<torus_poly<P>, P::l> trlwe<P>::decompose(torus_poly<P> &a)
             a_hat[i][j] = (((a[j] + roundoffset) >> (32 - Bgbit * i)) & (Bg - 1));
 
     for (i = l - 1; i >= 0; i--)
+    {
         for (j = 0; j < N; j++)
         {
             if (a_hat[i][j] >= Bg / 2)
@@ -103,5 +108,6 @@ std::array<torus_poly<P>, P::l> trlwe<P>::decompose(torus_poly<P> &a)
                 a_bar[i][j] = a_hat[i][j];
             }
         }
+    }
     return a_bar;
 }

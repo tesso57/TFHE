@@ -7,9 +7,8 @@ SRCS:=$(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.cpp))
 OBJS:=$(SRCS:.cpp=.o)
 OBJSDIR:=./obj
 TESTOBJS:=$(filter-out ./src/main.o,$(OBJS))
-TEST=test_tlwe
 .PHONY: all
-all : test main clean
+all : test main
 
 main : $(OBJS)
 	$(CC) -o $@.out $(addprefix $(OBJSDIR)/,$(notdir $^))
@@ -17,9 +16,11 @@ main : $(OBJS)
 .cpp.o:
 	$(CC) $(CXXFLAGS) -c $< $(INC) -o $(addprefix $(OBJSDIR)/,$(notdir $(<:.cpp=.o)))
 
-test : $(TESTOBJS) ./test/$(TEST).o
-	$(CC) -o $(TEST).out  $(addprefix $(OBJSDIR)/,$(notdir $^))
+test_tlwe : $(TESTOBJS) ./test/test_tlwe.o
+	$(CC) -o test_tlwe.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
 
-.PHONY: clean
-clean :
-	rm $(OBJS)
+test_trlwe : $(TESTOBJS) ./test/test_trlwe.o
+	$(CC) -o test_trlwe.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
+
+.PHONY: test
+test : test_tlwe test_trlwe

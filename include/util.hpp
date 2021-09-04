@@ -27,11 +27,18 @@ void poly_mult(std::array<T, N> &out, std::array<T, N> &a, std::array<T, N> &b)
     for (T &v : out)
         v = 0;
 
-    size_t i, j;
-    for (i = 0; i < N; i++)
-        for (j = 0; j < N; j++)
+    size_t i = 0, j = 0;
+    for (auto v : a)
+    {
+        for (auto v2 : b)
+        {
             if (i + j < N)
-                out[i + j] += a[i] * b[i];
+                out[i + j] += v * v2;
             else
-                out[i + j - N] -= a[i] * b[i];
+                out[i + j - N] -= v * v2;
+            j++;
+        }
+        i++;
+        j = 0;
+    }
 }
