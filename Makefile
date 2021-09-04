@@ -22,5 +22,7 @@ test_tlwe : $(TESTOBJS) ./test/test_tlwe.o
 test_trlwe : $(TESTOBJS) ./test/test_trlwe.o
 	$(CC) -o test_trlwe.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
 
+test_trgsw : $(TESTOBJS) ./test/test_trgsw.o
+	$(CC) -o test_trgsw.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
 .PHONY: test
-test : test_tlwe test_trlwe
+test : test_tlwe test_trlwe test_trgsw
