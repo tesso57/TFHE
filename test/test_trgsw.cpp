@@ -46,8 +46,8 @@ int main()
     cout << "External Product" << endl;
     auto m = gen_random_bool_array<P::N>(engine);
     auto c = gen_random_bool_value(engine);
-    auto trlwe_ = trlwe<P>::encrypto_bool(m, key, engine);
-    auto trgsw_ = trgsw<P>::encrypto_bool(c, key, engine);
+    auto trlwe_ = trlwe<P>::encrypt_bool(m, key, engine);
+    auto trgsw_ = trgsw<P>::encrypt_bool(c, key, engine);
     auto res = trgsw<P>::external_product(trgsw_, trlwe_);
     auto res_text = res.decrypto_bool(key);
 
@@ -76,9 +76,9 @@ int main()
     auto m2 = gen_random_bool_array<P::N>(engine);
     auto c2 = gen_random_bool_value(engine);
 
-    auto thn = trlwe<P>::encrypto_bool(m1, key, engine);
-    auto els = trlwe<P>::encrypto_bool(m2, key, engine);
-    auto cond = trgsw<P>::encrypto_bool(c2, key, engine);
+    auto thn = trlwe<P>::encrypt_bool(m1, key, engine);
+    auto els = trlwe<P>::encrypt_bool(m2, key, engine);
+    auto cond = trgsw<P>::encrypt_bool(c2, key, engine);
 
     auto r = cmux(cond, thn, els);
     auto r_text = r.decrypto_bool(key);

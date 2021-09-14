@@ -18,7 +18,7 @@ trlwe<P>::trlwe()
 }
 
 template <class P>
-trlwe<P> trlwe<P>::encrypto(torus_poly<P> text, secret_key<P> &key, std::random_device &engine)
+trlwe<P> trlwe<P>::encrypt(torus_poly<P> text, secret_key<P> &key, std::random_device &engine)
 {
     trlwe<P> instance = trlwe<P>();
     std::array<torus, P::N> &s = key.level1, as, e;
@@ -37,18 +37,18 @@ trlwe<P> trlwe<P>::encrypto(torus_poly<P> text, secret_key<P> &key, std::random_
 }
 
 template <class P>
-trlwe<P> trlwe<P>::encrypto_bool(bool_poly<P> text, secret_key<P> &key, std::random_device &engine)
+trlwe<P> trlwe<P>::encrypt_bool(bool_poly<P> text, secret_key<P> &key, std::random_device &engine)
 {
     const torus mu = 1u << 29;
     torus_poly<P> t;
     size_t i;
     for (i = 0; i < P::N; i++)
         t[i] = text[i] ? mu : -mu;
-    return encrypto(t, key, engine);
+    return encrypt(t, key, engine);
 }
 
 template <class P>
-trlwe<P> trlwe<P>::encrypto_zero(secret_key<P> &key, std::random_device &engine)
+trlwe<P> trlwe<P>::encrypt_zero(secret_key<P> &key, std::random_device &engine)
 {
     //すべてが0の配列
     torus_poly<P> m;
@@ -56,7 +56,7 @@ trlwe<P> trlwe<P>::encrypto_zero(secret_key<P> &key, std::random_device &engine)
     {
         v = 0;
     }
-    return encrypto(m, key, engine);
+    return encrypt(m, key, engine);
 }
 
 template <class P>

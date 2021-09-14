@@ -8,12 +8,12 @@ trgsw<P>::trgsw()
 }
 
 template <class P>
-trgsw<P> trgsw<P>::encrypto(poly<P> mu, secret_key<P> &key, std::random_device &engine)
+trgsw<P> trgsw<P>::encrypt(poly<P> mu, secret_key<P> &key, std::random_device &engine)
 {
     size_t N = P::N, l = P::l, Bgbit = P::Bgbit, i, j;
     trgsw<P> instance;
     for (auto &v : instance.data)
-        v = trlwe<P>::encrypto_zero(key, engine);
+        v = trlwe<P>::encrypt_zero(key, engine);
     for (i = 0; i < l; i++)
         for (j = 0; j < N; j++)
         {
@@ -24,7 +24,7 @@ trgsw<P> trgsw<P>::encrypto(poly<P> mu, secret_key<P> &key, std::random_device &
     return instance;
 }
 template <class P>
-trgsw<P> trgsw<P>::encrypto_bool(bool mu, secret_key<P> &key, std::random_device &engine)
+trgsw<P> trgsw<P>::encrypt_bool(bool mu, secret_key<P> &key, std::random_device &engine)
 {
     poly<P> tmp;
     for (auto &v : tmp)
@@ -32,7 +32,7 @@ trgsw<P> trgsw<P>::encrypto_bool(bool mu, secret_key<P> &key, std::random_device
         v = 0;
     }
     tmp[0] = mu ? 1 : 0;
-    return trgsw<P>::encrypto(tmp, key, engine);
+    return trgsw<P>::encrypt(tmp, key, engine);
 }
 
 template <class P>

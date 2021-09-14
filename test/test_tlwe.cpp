@@ -17,7 +17,7 @@ int main()
      torus text = torus_uniform_dist_val(engine);
      cout << "plaintext >>" << endl
           << text << endl;
-     auto t = tlwe<P, 0>::encrypto(text, key, engine);
+     auto t = tlwe<P, 0>::encrypt(text, key, engine);
      cout << "ciphertext >>" << endl
           << t.text << endl
           << "deciphertext >>" << endl

@@ -58,18 +58,18 @@ int main()
     for (auto &v : plaintext)
         v = torus_uniform_dist_val(engine);
     // cout << "plaintext >>" << endl;
-    auto t = trlwe<P>::encrypto(plaintext, key, engine);
+    auto t = trlwe<P>::encrypt(plaintext, key, engine);
     auto deciphertext = t.decrypto(key);
     isEqual<P>(plaintext, deciphertext);
 
     cout << "bool" << endl;
     auto m = gen_random_bool_array<P::N>(engine);
-    t = trlwe<P>::encrypto_bool(m, key, engine);
+    t = trlwe<P>::encrypt_bool(m, key, engine);
     auto dec = t.decrypto_bool(key);
     isEqual_bool<P>(m, dec);
 
     cout << "zero" << endl;
-    auto z = trlwe<P>::encrypto_zero(key, engine);
+    auto z = trlwe<P>::encrypt_zero(key, engine);
     auto zero = z.decrypto(key);
     for (auto v : zero)
     {
