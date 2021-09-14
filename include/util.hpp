@@ -22,7 +22,7 @@ inline torus torus_uniform_dist_val(std::random_device &engine)
 }
 
 template <typename T, typename T1, typename T2, size_t N>
-void poly_mult(std::array<T, N> &out, std::array<T, N> &a, std::array<T, N> &b)
+void poly_mult(std::array<T, N> &out, std::array<T1, N> &a, std::array<T2, N> &b)
 {
     for (T &v : out)
         v = 0;
@@ -31,7 +31,7 @@ void poly_mult(std::array<T, N> &out, std::array<T, N> &a, std::array<T, N> &b)
     for (i = 0; i < N; i++)
         for (j = 0; j < N; j++)
             if (i + j < N)
-                out[i + j] += a[i] * b[i];
+                out[i + j] += a[i] * b[j];
             else
-                out[i + j - N] -= a[i] * b[i];
+                out[i + j - N] -= a[i] * b[j];
 }

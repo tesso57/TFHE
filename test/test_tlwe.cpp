@@ -12,7 +12,7 @@ using namespace std;
 int main()
 {
      std::random_device engine;
-     using P = CASE1;
+     using P = Test;
      auto key = secret_key<P>(engine);
      torus text = torus_uniform_dist_val(engine);
      cout << "plaintext >>" << endl

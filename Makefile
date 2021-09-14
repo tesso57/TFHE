@@ -1,5 +1,5 @@
 CC := g++-10
-CXXFLAGS=-std=c++20 -Wall -Wextra -pedantic
+CXXFLAGS=-std=c++20 -Wall -Wextra -pedantic   -g3 
 INC= -I ./include/
 SRCROOT:= ./src
 SRCDIRS := $(shell find $(SRCROOT) -type d)
@@ -17,12 +17,12 @@ main : $(OBJS)
 	$(CC) $(CXXFLAGS) -c $< $(INC) -o $(addprefix $(OBJSDIR)/,$(notdir $(<:.cpp=.o)))
 
 test_tlwe : $(TESTOBJS) ./test/test_tlwe.o
-	$(CC) -o test_tlwe.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
+	$(CC)  $(CXXFLAGS) -o test_tlwe.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
 
 test_trlwe : $(TESTOBJS) ./test/test_trlwe.o
-	$(CC) -o test_trlwe.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
+	$(CC)  $(CXXFLAGS) -o test_trlwe.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
 
 test_trgsw : $(TESTOBJS) ./test/test_trgsw.o
-	$(CC) -o test_trgsw.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
+	$(CC)  $(CXXFLAGS) -o test_trgsw.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
 .PHONY: test
 test : test_tlwe test_trlwe test_trgsw
