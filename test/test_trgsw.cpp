@@ -41,24 +41,20 @@ int main()
     //test external_product
     std::random_device engine;
     using P = Test;
-
     auto key = secret_key<P>(engine);
 
+    cout << "External Product" << endl;
     auto m = gen_random_bool_array<P::N>(engine);
-    for (auto &v : m)
-    {
-        v = 0;
-    }
     auto c = gen_random_bool_value(engine);
     auto trlwe_ = trlwe<P>::encrypto_bool(m, key, engine);
     auto trgsw_ = trgsw<P>::encrypto_bool(c, key, engine);
     auto res = trgsw<P>::external_product(trgsw_, trlwe_);
     auto res_text = res.decrypto_bool(key);
-    cout << c << endl;
+
+    bool f = false;
     if (c)
     {
         cout << (m == res_text ? "OK" : "NO") << endl;
-        return 0;
     }
     else
     {
@@ -67,9 +63,32 @@ int main()
             if (v != 0)
             {
                 cout << "NO" << endl;
-                return 0;
+                break;
+                f = true;
             }
         }
-        cout << "OK" << endl;
+        if (!f)
+            cout << "OK" << endl;
+    }
+
+    cout << "CUMX" << endl;
+    auto m1 = gen_random_bool_array<P::N>(engine);
+    auto m2 = gen_random_bool_array<P::N>(engine);
+    auto c2 = gen_random_bool_value(engine);
+
+    auto thn = trlwe<P>::encrypto_bool(m1, key, engine);
+    auto els = trlwe<P>::encrypto_bool(m2, key, engine);
+    auto cond = trgsw<P>::encrypto_bool(c2, key, engine);
+
+    auto r = cmux(cond, thn, els);
+    auto r_text = r.decrypto_bool(key);
+
+    if (c2)
+    {
+        cout << (m2 == r_text ? "OK" : "NO") << endl;
+    }
+    else
+    {
+        cout << (m1 == r_text ? "OK" : "NO") << endl;
     }
 }

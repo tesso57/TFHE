@@ -17,5 +17,4 @@ struct trlwe
     bool_poly<P> decrypto_bool(secret_key<P> &key);
     static void decompose(std::array<std::array<torus, P::N>, P::l> &out, torus_poly<P> &a);
 };
-
 template struct trlwe<Test>;

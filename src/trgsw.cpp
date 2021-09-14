@@ -61,3 +61,26 @@ trlwe<P> trgsw<P>::external_product(trgsw<P> C, trlwe<P> in)
     }
     return instance;
 }
+
+template <class P>
+trlwe<P> cmux(trgsw<P> &cond, trlwe<P> &thn, trlwe<P> &els)
+{
+    trlwe<P> out;
+    trlwe<P> tmp0;
+    for (size_t i = 0; i < P::N; i++)
+    {
+        tmp0.a[i] = els.a[i] - thn.a[i];
+        tmp0.text[i] = els.text[i] - thn.text[i];
+    }
+    trlwe<P> tmp1;
+    tmp1 = trgsw<P>::external_product(cond, tmp0);
+
+    for (size_t i = 0; i < P::N; i++)
+    {
+        out.a[i] = tmp1.a[i] + thn.a[i];
+        out.text[i] = tmp1.text[i] + thn.text[i];
+    }
+    return out;
+}
+
+template trlwe<Test> cmux(trgsw<Test> &cond, trlwe<Test> &thn, trlwe<Test> &els);

@@ -13,5 +13,7 @@ struct trgsw
     static trgsw<P> encrypto_bool(bool mu, secret_key<P> &key, std::random_device &engine);
     static trlwe<P> external_product(trgsw<P> trgsw, trlwe<P> trlwe);
 };
+template <class P>
+trlwe<P> cmux(trgsw<P> &cond, trlwe<P> &thn, trlwe<P> &els);
 
 template struct trgsw<Test>;

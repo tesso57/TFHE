@@ -1,8 +1,8 @@
 #include <array>
 #include <random>
-#include <iostream>
 #include "util.hpp"
 #include "trlwe.hpp"
+#include "trgsw.hpp"
 #include "key.hpp"
 template <class P>
 trlwe<P>::trlwe()
