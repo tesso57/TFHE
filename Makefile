@@ -24,5 +24,9 @@ test_trlwe : $(TESTOBJS) ./test/test_trlwe.o
 
 test_trgsw : $(TESTOBJS) ./test/test_trgsw.o
 	$(CC)  $(CXXFLAGS) -o test_trgsw.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
+
+test_gatebootstrapping : $(TESTOBJS) ./test/test_gatebootstrapping.o
+	$(CC)  $(CXXFLAGS) -o test_trgsw.out  $(addprefix $(OBJSDIR)/,$(notdir $^))
+
 .PHONY: test
-test : test_tlwe test_trlwe test_trgsw
+test : test_tlwe test_trlwe test_trgsw test_gatebootstrapping
