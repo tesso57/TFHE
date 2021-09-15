@@ -4,6 +4,7 @@
 #include "trlwe.hpp"
 #include "trgsw.hpp"
 #include "key.hpp"
+#include "tlwe.hpp"
 template <class P>
 trlwe<P>::trlwe()
 {
@@ -60,6 +61,18 @@ trlwe<P> trlwe<P>::encrypt_zero(secret_key<P> &key, std::random_device &engine)
 }
 
 template <class P>
+trlwe<P> trlwe<P>::encrypt_trivial(torus_poly<P> text)
+{
+    trlwe<P> instance = trlwe<P>();
+    for (size_t i = 0; i < P::N; i++)
+    {
+        instance.a[i] = 0;
+    }
+    instance.text = text;
+    return instance;
+}
+
+template <class P>
 torus_poly<P> trlwe<P>::decrypto(secret_key<P> &key)
 {
     torus_poly<P> deciphertext, as;
@@ -103,3 +116,26 @@ void trlwe<P>::decompose(std::array<std::array<torus, P::N>, P::l> &out, torus_p
             out[i][j] =
                 ((a_tilde[j] >> (32 - Bgbit * (i + 1))) & (Bg - 1)) - Bg / 2;
 }
+
+template <class P>
+tlwe<P, 1> sample_extract_index(trlwe<P> &in, size_t k)
+{
+    size_t N = P::N;
+    tlwe<P, 1> out = tlwe<P, 1>();
+
+    out.text = in.text[k];
+    for (size_t i = 0; i < N; i++)
+    {
+        if (i <= k)
+        {
+            out.a[i] = in.a[k - i];
+        }
+        else
+        {
+            out.a[i] = -in.a[N + k - i];
+        }
+    }
+    return out;
+}
+
+template tlwe<Test, 1> sample_extract_index(trlwe<Test> &in, size_t k);

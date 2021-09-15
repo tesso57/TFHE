@@ -35,3 +35,24 @@ void poly_mult(std::array<T, N> &out, std::array<T1, N> &a, std::array<T2, N> &b
             else
                 out[i + j - N] -= a[i] * b[j];
 }
+
+//動かす
+template <typename T, typename T1, size_t N>
+void poly_mult_by_X_k(std::array<T, N> &out, std::array<T1, N> &poly, size_t k)
+{
+    if (k < N)
+    {
+        for (size_t i = 0; i < N - k; i++)
+            out[i + k] = poly[i];
+        for (size_t i = N - k; i < N; i++)
+            out[i + k - N] = -poly[i];
+    }
+    else
+    {
+        size_t l = k - N;
+        for (size_t i = 0; i < N - l; i++)
+            out[i + l] = -poly[i];
+        for (size_t i = N - l; i < N; i++)
+            out[i + l - N] = poly[i];
+    }
+}

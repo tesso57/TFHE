@@ -3,11 +3,6 @@
 #include "trlwe.hpp"
 #include <iostream>
 template <class P>
-trgsw<P>::trgsw()
-{
-}
-
-template <class P>
 trgsw<P> trgsw<P>::encrypt(poly<P> mu, secret_key<P> &key, std::random_device &engine)
 {
     size_t N = P::N, l = P::l, Bgbit = P::Bgbit, i, j;
@@ -69,16 +64,16 @@ trlwe<P> cmux(trgsw<P> &cond, trlwe<P> &thn, trlwe<P> &els)
     trlwe<P> tmp0;
     for (size_t i = 0; i < P::N; i++)
     {
-        tmp0.a[i] = els.a[i] - thn.a[i];
-        tmp0.text[i] = els.text[i] - thn.text[i];
+        tmp0.a[i] = thn.a[i] - els.a[i];
+        tmp0.text[i] = thn.text[i] - els.text[i];
     }
     trlwe<P> tmp1;
     tmp1 = trgsw<P>::external_product(cond, tmp0);
 
     for (size_t i = 0; i < P::N; i++)
     {
-        out.a[i] = tmp1.a[i] + thn.a[i];
-        out.text[i] = tmp1.text[i] + thn.text[i];
+        out.a[i] = tmp1.a[i] + els.a[i];
+        out.text[i] = tmp1.text[i] + els.text[i];
     }
     return out;
 }

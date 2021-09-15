@@ -73,5 +73,5 @@ torus tlwe<P, level>::decrypto(secret_key<P> &key)
 template <class P, int level>
 bool tlwe<P, level>::decrypto_bool(secret_key<P> &key)
 {
-    return decrypto(key) > 0;
+    return static_cast<int32_t>(decrypto(key)) > 0;
 }

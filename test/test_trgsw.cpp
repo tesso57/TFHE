@@ -85,10 +85,10 @@ int main()
 
     if (c2)
     {
-        cout << (m2 == r_text ? "OK" : "NO") << endl;
+        cout << (m1 == r_text ? "OK" : "NO") << endl;
     }
     else
     {
-        cout << (m1 == r_text ? "OK" : "NO") << endl;
+        cout << (m2 == r_text ? "OK" : "NO") << endl;
     }
 }

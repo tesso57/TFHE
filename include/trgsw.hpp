@@ -8,7 +8,6 @@ template <class P>
 struct trgsw
 {
     std::array<trlwe<P>, 2 * P::l> data;
-    trgsw();
     static trgsw<P> encrypt(poly<P> mu, secret_key<P> &key, std::random_device &engine);
     static trgsw<P> encrypt_bool(bool mu, secret_key<P> &key, std::random_device &engine);
     static trlwe<P> external_product(trgsw<P> trgsw, trlwe<P> trlwe);
