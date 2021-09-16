@@ -49,7 +49,7 @@ int main()
     auto trlwe_ = trlwe<P>::encrypt_bool(m, key, engine);
     auto trgsw_ = trgsw<P>::encrypt_bool(c, key, engine);
     auto res = trgsw<P>::external_product(trgsw_, trlwe_);
-    auto res_text = res.decrypto_bool(key);
+    auto res_text = res.decrypt_bool(key);
 
     bool f = false;
     if (c)
@@ -81,7 +81,7 @@ int main()
     auto cond = trgsw<P>::encrypt_bool(c2, key, engine);
 
     auto r = cmux(cond, thn, els);
-    auto r_text = r.decrypto_bool(key);
+    auto r_text = r.decrypt_bool(key);
 
     if (c2)
     {

@@ -73,7 +73,7 @@ trlwe<P> trlwe<P>::encrypt_trivial(torus_poly<P> text)
 }
 
 template <class P>
-torus_poly<P> trlwe<P>::decrypto(secret_key<P> &key)
+torus_poly<P> trlwe<P>::decrypt(secret_key<P> &key)
 {
     torus_poly<P> deciphertext, as;
     size_t i;
@@ -87,9 +87,9 @@ torus_poly<P> trlwe<P>::decrypto(secret_key<P> &key)
 }
 
 template <class P>
-bool_poly<P> trlwe<P>::decrypto_bool(secret_key<P> &key)
+bool_poly<P> trlwe<P>::decrypt_bool(secret_key<P> &key)
 {
-    torus_poly<P> t = decrypto(key);
+    torus_poly<P> t = decrypt(key);
     bool_poly<P> deciphertext;
     size_t i;
     for (i = 0; i < P::N; i++)

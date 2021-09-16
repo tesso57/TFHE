@@ -28,7 +28,7 @@ int main()
           cout << "ciphertext >>" << endl
                << t.text << endl
                << "deciphertext >>" << endl
-               << t.decrypto(key) << endl;
+               << t.decrypt(key) << endl;
      }
 
      {
@@ -38,7 +38,7 @@ int main()
           cout << "ciphertext >>" << endl
                << t.text << endl
                << "deciphertext >>" << endl
-               << t.decrypto_bool(key) << endl;
-          cout << (text == t.decrypto_bool(key) ? "YES" : "NO") << endl;
+               << t.decrypt_bool(key) << endl;
+          cout << (text == t.decrypt_bool(key) ? "YES" : "NO") << endl;
      }
 }

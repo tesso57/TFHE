@@ -54,7 +54,7 @@ tlwe<P, level> tlwe<P, level>::encrypt_bool(bool text, secret_key<P> &key, std::
 }
 
 template <class P, int level>
-torus tlwe<P, level>::decrypto(secret_key<P> &key)
+torus tlwe<P, level>::decrypt(secret_key<P> &key)
 {
     torus deciphertext = this->text;
     std::array<torus, N()> s = select_key(key);
@@ -71,7 +71,7 @@ torus tlwe<P, level>::decrypto(secret_key<P> &key)
 }
 
 template <class P, int level>
-bool tlwe<P, level>::decrypto_bool(secret_key<P> &key)
+bool tlwe<P, level>::decrypt_bool(secret_key<P> &key)
 {
-    return static_cast<int32_t>(decrypto(key)) > 0;
+    return static_cast<int32_t>(decrypt(key)) > 0;
 }

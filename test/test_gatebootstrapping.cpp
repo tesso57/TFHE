@@ -28,7 +28,7 @@ int main()
     tlwe<P, 1> res_tlwe = tlwe<P, 1>();
     res_trlwe = blind_rotate(input, testvec, bkey);
     res_tlwe = sample_extract_index(res_trlwe, 0);
-    auto res_p = res_tlwe.decrypto_bool(key);
+    auto res_p = res_tlwe.decrypt_bool(key);
 
     if (p != res_p)
     {

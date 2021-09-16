@@ -15,6 +15,11 @@ struct Test
     static constexpr double alpha_bk = 0.0;
     static constexpr uint32_t Bgbit = 6;
     static constexpr uint32_t Bg = 1 << Bgbit;
+    //IDENTITY KEY SWITCHING params
+    static constexpr uint32_t t = 8;
+    static constexpr uint32_t basebit = 2;
+    static constexpr double alphaks = alpha;
+    static constexpr uint32_t mu = 1U << 29;
 };
 
 struct CASE1

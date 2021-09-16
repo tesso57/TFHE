@@ -1,11 +1,17 @@
 #pragma once
 #include <random>
 #include <array>
+#include <vector>
 #include "tlwe.hpp"
 
 template <class P>
 struct key_switching_key
 {
-    std::array<tlwe<P, 0>, P::N * P::t *((1 << P::basebit) - 1)> data;
+    std::vector<tlwe<P, 0>> data;
     key_switching_key(std::random_device &engine, secret_key<P> key);
 };
+
+template struct key_switching_key<Test>;
+
+template <class P>
+tlwe<P, 0> identity_key_switch(tlwe<P, 1> &src, key_switching_key<P> &ks);

@@ -23,8 +23,8 @@ struct tlwe
     static std::array<torus, tlwe<P, level>::N()> select_key(secret_key<P> &key);
     static tlwe<P, level> encrypt(torus text, secret_key<P> &key, std::random_device &engine);
     static tlwe<P, level> encrypt_bool(bool text, secret_key<P> &key, std::random_device &engine);
-    torus decrypto(secret_key<P> &key);
-    bool decrypto_bool(secret_key<P> &key);
+    torus decrypt(secret_key<P> &key);
+    bool decrypt_bool(secret_key<P> &key);
 };
 template struct tlwe<CASE1, 0>;
 template struct tlwe<CASE1, 1>;

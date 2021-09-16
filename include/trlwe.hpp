@@ -15,8 +15,8 @@ struct trlwe
     static trlwe encrypt_bool(bool_poly<P> text, secret_key<P> &key, std::random_device &engine);
     static trlwe encrypt_zero(secret_key<P> &key, std::random_device &engine);
     static trlwe encrypt_trivial(torus_poly<P> text);
-    torus_poly<P> decrypto(secret_key<P> &key);
-    bool_poly<P> decrypto_bool(secret_key<P> &key);
+    torus_poly<P> decrypt(secret_key<P> &key);
+    bool_poly<P> decrypt_bool(secret_key<P> &key);
     static void decompose(std::array<std::array<torus, P::N>, P::l> &out, torus_poly<P> &a);
 };
 template struct trlwe<Test>;
