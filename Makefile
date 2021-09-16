@@ -28,5 +28,8 @@ test_trgsw : $(TESTOBJS) ./test/test_trgsw.o
 test_gatebootstrapping : $(TESTOBJS) ./test/test_gatebootstrapping.o
 	$(CC)  $(CXXFLAGS) -o test_gatebootstrapping.out $(addprefix $(OBJSDIR)/,$(notdir $^))
 
+test_identitykeyswitching : $(TESTOBJS) ./test/test_identitykeyswitching.o
+	$(CC)  $(CXXFLAGS) -o test_identitykeyswitching.out $(addprefix $(OBJSDIR)/,$(notdir $^))
+
 .PHONY: test
-test : test_tlwe test_trlwe test_trgsw test_gatebootstrapping
+test : test_tlwe test_trlwe test_trgsw test_gatebootstrapping test_identitykeyswitching
