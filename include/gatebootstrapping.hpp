@@ -22,3 +22,6 @@ template <class P>
 trlwe<P> gate_bootstrapping_test_vector();
 
 template struct bootstrapping_key<Test>;
+
+template <class P>
+tlwe<P, 1> gate_booststrapping_tlwe_to_tlwe(tlwe<P, 0> &src, bootstrapping_key<P> &bkey);

@@ -54,3 +54,13 @@ trlwe<P> gate_bootstrapping_test_vector()
 }
 
 template trlwe<Test> gate_bootstrapping_test_vector();
+
+template <class P>
+tlwe<P, 1> gate_booststrapping_tlwe_to_tlwe(tlwe<P, 0> &src, bootstrapping_key<P> &bkey)
+{
+    auto testvec = gate_bootstrapping_test_vector<P>();
+    auto trlwe_ = blind_rotate(src, testvec, bkey);
+    return sample_extract_index(trlwe_, 0);
+}
+
+template tlwe<Test, 1> gate_booststrapping_tlwe_to_tlwe(tlwe<Test, 0> &src, bootstrapping_key<Test> &bkey);
