@@ -2,7 +2,7 @@
 
 ## HOMO NAND RESULTS
  
-1. commit ID
+1. [950d5200045791a64a96555a097318266ff93887](https://github.com/tesso57/TFHE/commit/950d5200045791a64a96555a097318266ff93887)
    - Naive implementation
    - generate keys : 49.907 sec
    - calculation time : 62.905 sec
