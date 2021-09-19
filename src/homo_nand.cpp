@@ -24,3 +24,4 @@ tlwe<P, 0> homo_nand(tlwe<P, 0> &lhs, tlwe<P, 0> &rhs, bootstrapping_key<P> &bke
 }
 
 template tlwe<Test, 0> homo_nand(tlwe<Test, 0> &lhs, tlwe<Test, 0> &rhs, bootstrapping_key<Test> &bkey, key_switching_key<Test> &ks);
+template tlwe<CASE1, 0> homo_nand(tlwe<CASE1, 0> &lhs, tlwe<CASE1, 0> &rhs, bootstrapping_key<CASE1> &bkey, key_switching_key<CASE1> &ks);

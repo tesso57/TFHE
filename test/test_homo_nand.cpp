@@ -22,7 +22,7 @@ int main()
 {
     cout << "homo nand" << endl;
     std::random_device engine;
-    using P = Test;
+    using P = CASE1;
     clock_t total, begin, end;
     cout << "generate keys ..." << endl;
     begin = clock();

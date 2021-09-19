@@ -79,3 +79,4 @@ trlwe<P> cmux(trgsw<P> &cond, trlwe<P> &thn, trlwe<P> &els)
 }
 
 template trlwe<Test> cmux(trgsw<Test> &cond, trlwe<Test> &thn, trlwe<Test> &els);
+template trlwe<CASE1> cmux(trgsw<CASE1> &cond, trlwe<CASE1> &thn, trlwe<CASE1> &els);

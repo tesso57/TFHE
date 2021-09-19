@@ -20,6 +20,7 @@ struct trlwe
     static void decompose(std::array<std::array<torus, P::N>, P::l> &out, torus_poly<P> &a);
 };
 template struct trlwe<Test>;
+template struct trlwe<CASE1>;
 
 template <class P>
 tlwe<P, 1> sample_extract_index(trlwe<P> &in, size_t k);

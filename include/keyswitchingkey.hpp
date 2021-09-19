@@ -12,6 +12,7 @@ struct key_switching_key
 };
 
 template struct key_switching_key<Test>;
+template struct key_switching_key<CASE1>;
 
 template <class P>
 tlwe<P, 0> identity_key_switch(tlwe<P, 1> &src, key_switching_key<P> &ks);

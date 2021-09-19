@@ -16,3 +16,4 @@ template <class P>
 trlwe<P> cmux(trgsw<P> &cond, trlwe<P> &thn, trlwe<P> &els);
 
 template struct trgsw<Test>;
+template struct trgsw<CASE1>;

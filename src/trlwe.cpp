@@ -28,7 +28,7 @@ trlwe<P> trlwe<P>::encrypt(torus_poly<P> text, secret_key<P> &key, std::random_d
         v = torus_uniform_dist_val(engine);
     poly_mult(as, instance.a, s);
     for (auto &v : e)
-        v = torus_modular_normal_dist_val(engine, P::alpha);
+        v = torus_modular_normal_dist_val(engine, P::alpha_bk);
 
     for (size_t i = 0; i < P::N; i++)
         text[i] += as[i] + e[i];
@@ -139,3 +139,4 @@ tlwe<P, 1> sample_extract_index(trlwe<P> &in, size_t k)
 }
 
 template tlwe<Test, 1> sample_extract_index(trlwe<Test> &in, size_t k);
+template tlwe<CASE1, 1> sample_extract_index(trlwe<CASE1> &in, size_t k);

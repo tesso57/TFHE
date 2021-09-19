@@ -42,6 +42,7 @@ trlwe<P> blind_rotate(tlwe<P, 0> &src, trlwe<P> &testvec, bootstrapping_key<P> &
     return out;
 }
 template trlwe<Test> blind_rotate(tlwe<Test, 0> &src, trlwe<Test> &testvec, bootstrapping_key<Test> &key);
+template trlwe<CASE1> blind_rotate(tlwe<CASE1, 0> &src, trlwe<CASE1> &testvec, bootstrapping_key<CASE1> &key);
 
 template <class P>
 trlwe<P> gate_bootstrapping_test_vector()
@@ -54,6 +55,7 @@ trlwe<P> gate_bootstrapping_test_vector()
 }
 
 template trlwe<Test> gate_bootstrapping_test_vector();
+template trlwe<CASE1> gate_bootstrapping_test_vector();
 
 template <class P>
 tlwe<P, 1> gate_booststrapping_tlwe_to_tlwe(tlwe<P, 0> &src, bootstrapping_key<P> &bkey)
@@ -64,3 +66,4 @@ tlwe<P, 1> gate_booststrapping_tlwe_to_tlwe(tlwe<P, 0> &src, bootstrapping_key<P
 }
 
 template tlwe<Test, 1> gate_booststrapping_tlwe_to_tlwe(tlwe<Test, 0> &src, bootstrapping_key<Test> &bkey);
+template tlwe<CASE1, 1> gate_booststrapping_tlwe_to_tlwe(tlwe<CASE1, 0> &src, bootstrapping_key<CASE1> &bkey);
