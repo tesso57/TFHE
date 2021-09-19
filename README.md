@@ -1,6 +1,6 @@
 # TFHE 
 
-## HOMO NAND RESULTS
+## HOM NAND RESULTS
  
 1. [950d5200045791a64a96555a097318266ff93887](https://github.com/tesso57/TFHE/commit/950d5200045791a64a96555a097318266ff93887)
    - Naive implementation
