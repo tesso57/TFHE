@@ -4,6 +4,7 @@
 #include "trlwe.hpp"
 #include "tlwe.hpp"
 #include "util.hpp"
+#include "fft.hpp"
 template <class P>
 bootstrapping_key<P>::bootstrapping_key(std::random_device &engine, secret_key<P> &key)
 {
