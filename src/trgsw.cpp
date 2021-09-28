@@ -1,7 +1,7 @@
 #include <array>
 #include "trgsw.hpp"
 #include "trlwe.hpp"
-#include <iostream>
+#include "fft.hpp"
 template <class P>
 trgsw<P> trgsw<P>::encrypt(poly<P> mu, secret_key<P> &key, std::random_device &engine)
 {
@@ -41,16 +41,16 @@ trlwe<P> trgsw<P>::external_product(trgsw<P> C, trlwe<P> in)
     torus_poly<P> tmp;
     for (i = 0; i < P::l; i++)
     {
-        poly_mult<torus, torus, torus, P::N>(tmp, dec_a[i], C.data[i].a);
+        polymult_fft<P>(tmp, dec_a[i], C.data[i].a);
         for (j = 0; j < P::N; j++)
             instance.a[j] += tmp[j];
-        poly_mult<torus, torus, torus, P::N>(tmp, dec_text[i], C.data[P::l + i].a);
+        polymult_fft<P>(tmp, dec_text[i], C.data[P::l + i].a);
         for (j = 0; j < P::N; j++)
             instance.a[j] += tmp[j];
-        poly_mult<torus, torus, torus, P::N>(tmp, dec_a[i], C.data[i].text);
+        polymult_fft<P>(tmp, dec_a[i], C.data[i].text);
         for (j = 0; j < P::N; j++)
             instance.text[j] += tmp[j];
-        poly_mult<torus, torus, torus, P::N>(tmp, dec_text[i], C.data[P::l + i].text);
+        polymult_fft<P>(tmp, dec_text[i], C.data[P::l + i].text);
         for (j = 0; j < P::N; j++)
             instance.text[j] += tmp[j];
     }

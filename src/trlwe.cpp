@@ -5,6 +5,7 @@
 #include "trgsw.hpp"
 #include "key.hpp"
 #include "tlwe.hpp"
+#include "fft.hpp"
 template <class P>
 trlwe<P>::trlwe()
 {
@@ -26,7 +27,7 @@ trlwe<P> trlwe<P>::encrypt(torus_poly<P> text, secret_key<P> &key, std::random_d
 
     for (torus &v : instance.a)
         v = torus_uniform_dist_val(engine);
-    poly_mult(as, instance.a, s);
+    polymult_fft<P>(as, instance.a, s);
     for (auto &v : e)
         v = torus_modular_normal_dist_val(engine, P::alpha_bk);
 
@@ -78,7 +79,7 @@ torus_poly<P> trlwe<P>::decrypt(secret_key<P> &key)
     torus_poly<P> deciphertext, as;
     size_t i;
     std::array<torus, P::N> &s = key.level1;
-    poly_mult<torus, torus, torus, P::N>(as, a, s);
+    polymult_fft<P>(as, a, s);
     for (i = 0; i < P::N; i++)
     {
         deciphertext[i] = text[i] - as[i];
