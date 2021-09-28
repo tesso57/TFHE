@@ -3,63 +3,64 @@
 #include "params.hpp"
 
 #include <array>
+#include <iostream>
 
-template <size_t N, bool inverse>
+template <size_t Nbit, bool inverse>
 void butterflyAdd(double *const a, double *const b, double rre, double rim)
 {
-    double are = a[0];
-    double aim = a[N];
-    double bre = b[0];
-    double bim = b[N];
+    size_t N = (1 << Nbit);
+    double *const are = a;
+    double *const aim = a + N;
+    double *const bre = b;
+    double *const bim = b + N;
 
     if (!inverse)
     {
 
-        const double tmpre = are;
-        are += bre;
-        bre = tmpre - bre;
+        const double tmpre = are[0];
+        are[0] += bre[0];
+        bre[0] = tmpre - bre[0];
 
-        const double tmpim = aim;
-        aim += bim;
-        bim = tmpim - bim;
+        const double tmpim = aim[0];
+        aim[0] += bim[0];
+        bim[0] = tmpim - bim[0];
 
-        const double temp = std::fma(bre, rim, bim * rre);
-        bre = std::fma(bre, rre, -bim * rim);
-        bim = temp;
+        const double temp = std::fma(bre[0], rim, bim[0] * rre);
+        bre[0] = std::fma(bre[0], rre, -bim[0] * rim);
+        bim[0] = temp;
     }
     else
     {
-        const double temp = std::fma(bre, rim, bim * rre);
-        bre = std::fma(bre, rre, -bim * rim);
-        bim = temp;
+        const double temp = std::fma(bre[0], rim, bim[0] * rre);
+        bre[0] = std::fma(bre[0], rre, -bim[0] * rim);
+        bim[0] = temp;
 
-        const double tmpre = are;
-        are += bre;
-        bre = tmpre - bre;
+        const double tmpre = are[0];
+        are[0] += bre[0];
+        bre[0] = tmpre - bre[0];
 
-        const double tmpim = aim;
-        aim += bim;
-        bim = tmpim - bim;
+        const double tmpim = aim[0];
+        aim[0] += bim[0];
+        bim[0] = tmpim - bim[0];
     }
 }
 
-template <size_t Nbit, int step = 0>
-void fft(double *const res)
+template <size_t Nbit>
+void fft(double *const res, size_t step)
 {
-    if (Nbit > 32)
-        return;
     uint32_t size = 1 << (Nbit - step);
     double *const res0 = &res[0];
     double *const res1 = &res[size / 2];
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < size / 2; i++)
     {
-        butterflyAdd<Nbit, true>(res0, res1, std::cos(2 * M_PI * i / size), std::sin(2 * M_PI * i / size));
+        butterflyAdd<Nbit, false>(res0 + i, res1 + i, std::cos(-2 * M_PI * i / size), std::sin(-2 * M_PI * i / size));
     }
-    // if (size > 2)
-    // {
-    //     fft<Nbit, step + 1>(res0);
-    //     fft<Nbit, step + 1>(res1);
-    // }
+
+    if (size > 2)
+    {
+        fft<Nbit>(res0, step + 1);
+        fft<Nbit>(res1, step + 1);
+    }
 }
 template <class P>
 void FFT(std::array<double, P::N> &res, std::array<torus, P::N> &a)
@@ -75,22 +76,23 @@ void FFT(std::array<double, P::N> &res, std::array<torus, P::N> &a)
         res[i] = std::fma(are, rre, -aim * rim);
         res[i + N / 2] = std::fma(are, rim, aim * rre);
     }
-    fft<Nbit - 1, 0>(res.data());
+    fft<Nbit - 1>(res.data(), 0);
 }
-template <uint32_t Nbit, uint32_t size>
-void ifft(double *const res)
+template <uint32_t Nbit>
+void ifft(double *const res, size_t step)
 {
+    uint32_t size = 1 << (Nbit - step);
     double *const res0 = &res[0];
     double *const res1 = &res[size / 2];
     if (size > 2)
     {
-        ifft<Nbit, (size >> 1)>(res0);
-        ifft<Nbit, (size >> 1)>(res1);
+        ifft<Nbit>(res0, step + 1);
+        ifft<Nbit>(res1, step + 1);
     }
 
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < size / 2; i++)
     {
-        butterflyAdd<Nbit, true>(res0, res1, std::cos(2 * M_PI * i / size), std::sin(2 * M_PI * i / size));
+        butterflyAdd<Nbit, true>(res0 + i, res1 + i, std::cos(2 * M_PI * i / size), std::sin(2 * M_PI * i / size));
     }
 }
 
@@ -99,7 +101,7 @@ void IFFT(std::array<torus, P::N> &res, std::array<double, P::N> &a)
 {
     constexpr size_t N = P::N, Nbit = P::Nbit;
 
-    ifft<Nbit - 1, (N >> 1)>(a.data());
+    ifft<Nbit - 1>(a.data(), 0);
 
     //重みづけ
     for (size_t i = 0; i < N / 2; i++)
