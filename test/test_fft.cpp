@@ -49,15 +49,16 @@ int main()
         }
         poly_mult(ans, a, b);
         polymult_fft<P>(res, a, b);
-        bool ok = false;
+        bool ok = true;
         for (size_t i = 0; i < P::N; i++)
         {
-            if (abs((int64_t)res[i] - (int64_t)ans[i]) > 50000)
+            cout << res[i] << endl;
+            if (abs((int64_t)res[i] - (int64_t)ans[i]) > 1000)
             {
-                ok = true;
+                ok = false;
                 break;
             }
         }
-        cout << (ok ? "No" : "Yes") << endl;
+        cout << (ok ? "Yes" : "No") << endl;
     }
 }

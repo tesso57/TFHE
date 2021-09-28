@@ -5,7 +5,9 @@
 #include <array>
 #include <iostream>
 #include <cmath>
-
+#include <string>
+#include <boost/multiprecision/cpp_int.hpp>
+using namespace boost::multiprecision;
 template <size_t Nbit, bool inverse>
 void butterflyAdd(double *const a, double *const b, double rre, double rim)
 {
@@ -105,7 +107,8 @@ void IFFT(std::array<torus, P::N> &res, std::array<double, P::N> &a)
 {
     constexpr size_t N = P::N, Nbit = P::Nbit;
     ifft<Nbit - 1>(a.data(), 0);
-    constexpr double power = (1ull << 32);
+    cpp_int intpower = (1ull << 32);
+    cpp_int x;
     //重みづけ
     for (size_t i = 0; i < N / 2; i++)
     {
@@ -113,14 +116,22 @@ void IFFT(std::array<torus, P::N> &res, std::array<double, P::N> &a)
         double aim = a[i + N / 2];
         double rre = cos(i * M_PI / N);
         double rim = -sin(i * M_PI / N);
-        double tmp = std::fmod(std::fma(are, rre, -aim * rim) * (2.0 / N), power);
-        if (tmp < 0)
-            tmp += power;
-        res[i] = static_cast<uint64_t>(tmp);
-        tmp = std::fmod(std::fma(are, rim, aim * rre) * (2.0 / N), power);
-        if (tmp < 0)
-            tmp += power;
-        res[i + N / 2] = static_cast<uint64_t>(tmp);
+        double tmp = std::fma(are, rre, -aim * rim) * (2.0 / N);
+        x.assign(tmp);
+        x %= intpower;
+        if (x < 0)
+        {
+            x += intpower;
+        }
+        res[i] = static_cast<uint64_t>(x);
+        tmp = std::fma(are, rim, aim * rre) * (2.0 / N);
+        x.assign(tmp);
+        x %= intpower;
+        if (x < 0)
+        {
+            x += intpower;
+        }
+        res[i + N / 2] = static_cast<uint64_t>(x);
     }
 }
 
