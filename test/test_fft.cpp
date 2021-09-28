@@ -24,7 +24,7 @@ int main()
     auto a = array<torus, P::N>();
     for (torus i = 0; i < 16; i++)
     {
-        a[i] = i + 1;
+        a[i] = (i + 1) * 1000;
     }
     auto b = array<torus, P::N>();
     for (torus i = 0; i < 16; i++)
@@ -37,5 +37,10 @@ int main()
     FFT<P>(ffta, a);
     IFFT<P>(res, ffta);
 
-    cout << (res == ans ? "Yes" : "No") << endl;
+    cout << (res == a ? "Yes" : "No") << endl;
+
+    for (auto v : res)
+    {
+        cout << v << endl;
+    }
 }

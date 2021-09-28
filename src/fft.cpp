@@ -24,7 +24,6 @@ void butterflyAdd(double *const a, double *const b, double rre, double rim)
         const double tmpim = aim[0];
         aim[0] += bim[0];
         bim[0] = tmpim - bim[0];
-
         const double temp = std::fma(bre[0], rim, bim[0] * rre);
         bre[0] = std::fma(bre[0], rre, -bim[0] * rim);
         bim[0] = temp;
@@ -82,6 +81,7 @@ template <uint32_t Nbit>
 void ifft(double *const res, size_t step)
 {
     uint32_t size = 1 << (Nbit - step);
+    size_t N = 1 << Nbit;
     double *const res0 = &res[0];
     double *const res1 = &res[size / 2];
     if (size > 2)
@@ -89,7 +89,6 @@ void ifft(double *const res, size_t step)
         ifft<Nbit>(res0, step + 1);
         ifft<Nbit>(res1, step + 1);
     }
-
     for (size_t i = 0; i < size / 2; i++)
     {
         butterflyAdd<Nbit, true>(res0 + i, res1 + i, std::cos(2 * M_PI * i / size), std::sin(2 * M_PI * i / size));
@@ -102,13 +101,12 @@ void IFFT(std::array<torus, P::N> &res, std::array<double, P::N> &a)
     constexpr size_t N = P::N, Nbit = P::Nbit;
 
     ifft<Nbit - 1>(a.data(), 0);
-
     //重みづけ
     for (size_t i = 0; i < N / 2; i++)
     {
-        double are = static_cast<double>(a[i]);
-        double aim = static_cast<double>(a[i + N / 2]);
-        double rre = -cos(i * M_PI / N);
+        double are = a[i];
+        double aim = a[i + N / 2];
+        double rre = cos(i * M_PI / N);
         double rim = -sin(i * M_PI / N);
         res[i] = static_cast<uint32_t>(std::fma(are, rre, -aim * rim) * (2.0 / N));
         res[i + N / 2] = static_cast<uint32_t>(std::fma(are, rim, aim * rre) * (2.0 / N));
