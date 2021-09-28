@@ -15,32 +15,51 @@
 using namespace std;
 int main()
 {
-    cout << "fft test" << endl;
     using P = Test;
     std::random_device engine;
-    auto res = array<torus, P::N>();
-    auto ans = array<torus, P::N>();
+    // {
+    //     cout << "fft test" << endl;
+    //     auto res = array<torus, P::N>();
+    //     auto ans = array<torus, P::N>();
+    //     for (torus i = 0; i < P::N; i++)
+    //     {
+    //         ans[i] = torus_uniform_dist_val(engine);
+    //         cout << ans[i] << " ";
+    //     }
+    //     cout << endl;
+    //     std::array<double, P::N> ffta;
+    //     FFT<P>(ffta, ans);
+    //     IFFT<P>(res, ffta);
+    //     cout << (res == ans ? "Yes" : "No") << endl;
+    // }
 
-    auto a = array<torus, P::N>();
-    for (torus i = 0; i < 16; i++)
     {
-        a[i] = (i + 1) * 1000;
-    }
-    auto b = array<torus, P::N>();
-    for (torus i = 0; i < 16; i++)
-    {
-        b[i] = i + 1;
-    }
-    // polymult_fft<P>(res, a, b);
-    // poly_mult<torus, torus, torus, P::N>(ans, a, b);
-    std::array<double, P::N> ffta;
-    FFT<P>(ffta, a);
-    IFFT<P>(res, ffta);
+        cout << "polymult test" << endl;
+        auto res = array<torus, P::N>();
+        auto ans = array<torus, P::N>();
 
-    cout << (res == a ? "Yes" : "No") << endl;
-
-    for (auto v : res)
-    {
-        cout << v << endl;
+        auto a = array<torus, P::N>();
+        auto b = array<torus, P::N>();
+        for (auto &v : a)
+        {
+            v = torus_uniform_dist_val(engine);
+            cout << v << " ";
+        }
+        cout << endl;
+        for (auto &v : b)
+        {
+            v = torus_uniform_dist_val(engine);
+            cout << v << " ";
+        }
+        cout << endl;
+        poly_mult(ans, a, b);
+        cout << "ANS" << endl;
+        for (auto v : ans)
+        {
+            cout << v << endl;
+        }
+        cout << "FFT" << endl;
+        polymult_fft<P>(res, a, b);
+        cout << (res == ans ? "Yes" : "No") << endl;
     }
 }
