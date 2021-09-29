@@ -31,8 +31,8 @@ test_gatebootstrapping : $(TESTOBJS) ./test/test_gatebootstrapping.o
 test_identitykeyswitching : $(TESTOBJS) ./test/test_identitykeyswitching.o
 	$(CC)  $(CXXFLAGS) -o test_identitykeyswitching.out $(addprefix $(OBJSDIR)/,$(notdir $^))
 
-test_homo_nand : $(TESTOBJS) ./test/test_homo_nand.o
-	$(CC)  $(CXXFLAGS) -o test_homo_nand.out $(addprefix $(OBJSDIR)/,$(notdir $^))
+test_hom_nand : $(TESTOBJS) ./test/test_homo_nand.o
+	$(CC)  $(CXXFLAGS) -o test_hom_nand.out $(addprefix $(OBJSDIR)/,$(notdir $^))
 
 test_fft : $(TESTOBJS) ./test/test_fft.o
 	$(CC)  $(CXXFLAGS) -o test_fft.out $(addprefix $(OBJSDIR)/,$(notdir $^))
