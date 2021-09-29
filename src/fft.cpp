@@ -74,8 +74,8 @@ void FFT(std::array<double, P::N> &res, std::array<torus, P::N> &a)
     //重みづけ
     for (size_t i = 0; i < N / 2; i++)
     {
-        double are = static_cast<double>(static_cast<int64_t>(a[i]));
-        double aim = static_cast<double>(static_cast<int64_t>(a[i + N / 2]));
+        double are = static_cast<double>(static_cast<int32_t>(a[i]));
+        double aim = static_cast<double>(static_cast<int32_t>(a[i + N / 2]));
         double rre = cos(i * M_PI / static_cast<double>(N));
         double rim = sin(i * M_PI / static_cast<double>(N));
         double aimrim = aim * rim;
@@ -116,22 +116,22 @@ void IFFT(std::array<torus, P::N> &res, std::array<double, P::N> &a)
         double aim = a[i + N / 2];
         double rre = cos(i * M_PI / N);
         double rim = -sin(i * M_PI / N);
-        double tmp = std::fma(are, rre, -aim * rim) * (2.0 / N);
+        double tmp = std::round(std::fma(are, rre, -aim * rim) * (2.0 / N));
         x.assign(tmp);
         x %= intpower;
         if (x < 0)
         {
             x += intpower;
         }
-        res[i] = static_cast<uint64_t>(x);
-        tmp = std::fma(are, rim, aim * rre) * (2.0 / N);
+        res[i] = static_cast<uint32_t>(x);
+        tmp = std::round(std::fma(are, rim, aim * rre) * (2.0 / N));
         x.assign(tmp);
         x %= intpower;
         if (x < 0)
         {
             x += intpower;
         }
-        res[i + N / 2] = static_cast<uint64_t>(x);
+        res[i + N / 2] = static_cast<uint32_t>(x);
     }
 }
 
