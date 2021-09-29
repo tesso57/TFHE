@@ -6,7 +6,10 @@
    - Naive implementation
    - generate keys : 49.907 sec
    - calculation time : 62.905 sec
-
+2. commit ID
+   - Implement FFT (radix-2)
+   - generate keys :  20.957 sec
+   - Calculation :  4.491 sec
 ### MACHINE INFO 
 
 - CPU : AMD Ryzen 7 3800XT 8-Core Processor 3.89 GHz
