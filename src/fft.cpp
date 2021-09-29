@@ -3,15 +3,12 @@
 #include "params.hpp"
 
 #include <array>
-#include <iostream>
 #include <cmath>
 #include <string>
-#include <boost/multiprecision/cpp_int.hpp>
-using namespace boost::multiprecision;
 template <size_t Nbit, bool inverse>
-void butterflyAdd(double *const a, double *const b, double rre, double rim)
+inline void butterflyAdd(double *const a, double *const b, double rre, double rim)
 {
-    size_t N = (1 << Nbit);
+    constexpr size_t N = (1 << Nbit);
     double *const are = a;
     double *const aim = a + N;
     double *const bre = b;
@@ -51,7 +48,7 @@ void butterflyAdd(double *const a, double *const b, double rre, double rim)
 }
 
 template <size_t Nbit>
-void fft(double *const res, size_t step)
+inline void fft(double *const res, size_t step)
 {
     uint32_t size = 1 << (Nbit - step);
     double *const res0 = &res[0];
@@ -68,7 +65,7 @@ void fft(double *const res, size_t step)
     }
 }
 template <class P>
-void FFT(std::array<double, P::N> &res, std::array<torus, P::N> &a)
+inline void FFT(std::array<double, P::N> &res, std::array<torus, P::N> &a)
 {
     constexpr size_t N = P::N, Nbit = P::Nbit;
     //重みづけ
@@ -86,7 +83,7 @@ void FFT(std::array<double, P::N> &res, std::array<torus, P::N> &a)
     fft<Nbit - 1>(res.data(), 0);
 }
 template <uint32_t Nbit>
-void ifft(double *const res, size_t step)
+inline void ifft(double *const res, size_t step)
 {
     uint32_t size = 1 << (Nbit - step);
     double *const res0 = &res[0];
@@ -103,12 +100,11 @@ void ifft(double *const res, size_t step)
 }
 
 template <class P>
-void IFFT(std::array<torus, P::N> &res, std::array<double, P::N> &a)
+inline void IFFT(std::array<torus, P::N> &res, std::array<double, P::N> &a)
 {
     constexpr size_t N = P::N, Nbit = P::Nbit;
+    constexpr double power = (1ull << 32);
     ifft<Nbit - 1>(a.data(), 0);
-    cpp_int intpower = (1ull << 32);
-    cpp_int x;
     //重みづけ
     for (size_t i = 0; i < N / 2; i++)
     {
@@ -116,28 +112,14 @@ void IFFT(std::array<torus, P::N> &res, std::array<double, P::N> &a)
         double aim = a[i + N / 2];
         double rre = cos(i * M_PI / N);
         double rim = -sin(i * M_PI / N);
-        double tmp = std::round(std::fma(are, rre, -aim * rim) * (2.0 / N));
-        x.assign(tmp);
-        x %= intpower;
-        if (x < 0)
-        {
-            x += intpower;
-        }
-        res[i] = static_cast<uint32_t>(x);
-        tmp = std::round(std::fma(are, rim, aim * rre) * (2.0 / N));
-        x.assign(tmp);
-        x %= intpower;
-        if (x < 0)
-        {
-            x += intpower;
-        }
-        res[i + N / 2] = static_cast<uint32_t>(x);
+        res[i] = static_cast<uint32_t>(std::fmod(std::round(std::fma(are, rre, -aim * rim) * (2.0 / N)), power));
+        res[i + N / 2] = static_cast<uint32_t>(std::fmod(std::round(std::fma(are, rim, aim * rre) * (2.0 / N)), power));
     }
 }
 
 template <size_t N>
-void mul_in_fd(std::array<double, N> &res, const std::array<double, N> &a,
-               const std::array<double, N> &b)
+inline void mul_in_fd(std::array<double, N> &res, const std::array<double, N> &a,
+                      const std::array<double, N> &b)
 {
     for (size_t i = 0; i < N / 2; i++)
     {
@@ -149,7 +131,7 @@ void mul_in_fd(std::array<double, N> &res, const std::array<double, N> &a,
 }
 
 template <class P>
-void polymult_fft(std::array<torus, P::N> &res, std::array<torus, P::N> &a, std::array<torus, P::N> &b)
+inline void polymult_fft(std::array<torus, P::N> &res, std::array<torus, P::N> &a, std::array<torus, P::N> &b)
 {
     constexpr size_t N = P::N;
     std::array<double, N> ffta, fftb, tmp;

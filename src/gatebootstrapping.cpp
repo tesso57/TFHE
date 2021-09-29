@@ -48,7 +48,7 @@ template trlwe<CASE1> blind_rotate(tlwe<CASE1, 0> &src, trlwe<CASE1> &testvec, b
 template <class P>
 trlwe<P> gate_bootstrapping_test_vector()
 {
-    torus mu = 1u << 29; // 1/8
+    constexpr torus mu = 1u << 29; // 1/8
     torus_poly<P> m;
     for (size_t i = 0; i < P::N; i++)
         m[i] = mu;

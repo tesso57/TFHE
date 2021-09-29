@@ -41,7 +41,7 @@ trlwe<P> trlwe<P>::encrypt(torus_poly<P> text, secret_key<P> &key, std::random_d
 template <class P>
 trlwe<P> trlwe<P>::encrypt_bool(bool_poly<P> text, secret_key<P> &key, std::random_device &engine)
 {
-    const torus mu = 1u << 29;
+    constexpr torus mu = 1u << 29;
     torus_poly<P> t;
     size_t i;
     for (i = 0; i < P::N; i++)
@@ -92,8 +92,7 @@ bool_poly<P> trlwe<P>::decrypt_bool(secret_key<P> &key)
 {
     torus_poly<P> t = decrypt(key);
     bool_poly<P> deciphertext;
-    size_t i;
-    for (i = 0; i < P::N; i++)
+    for (size_t i = 0; i < P::N; i++)
         deciphertext[i] = (static_cast<int32_t>(t[i]) > 0 ? true : false);
     return deciphertext;
 }
@@ -101,19 +100,19 @@ bool_poly<P> trlwe<P>::decrypt_bool(secret_key<P> &key)
 template <class P>
 void trlwe<P>::decompose(std::array<std::array<torus, P::N>, P::l> &out, torus_poly<P> &a)
 {
-    torus Bg = P::Bg;
-    size_t l = P::l, N = P::N, Bgbit = P::Bgbit, i, j;
+    constexpr torus Bg = P::Bg;
+    constexpr size_t l = P::l, N = P::N, Bgbit = P::Bgbit;
     torus offset = 0;
     for (size_t i = 0; i < l; i++)
     {
         offset += Bg / 2 * (1u << (32 - (i + 1) * Bgbit));
     }
     std::array<torus, P::N> a_tilde;
-    for (i = 0; i < N; i++)
+    for (size_t i = 0; i < N; i++)
         a_tilde[i] = a[i] + offset;
 
-    for (i = 0; i < l; i++)
-        for (j = 0; j < N; j++)
+    for (size_t i = 0; i < l; i++)
+        for (size_t j = 0; j < N; j++)
             out[i][j] =
                 ((a_tilde[j] >> (32 - Bgbit * (i + 1))) & (Bg - 1)) - Bg / 2;
 }
@@ -121,21 +120,15 @@ void trlwe<P>::decompose(std::array<std::array<torus, P::N>, P::l> &out, torus_p
 template <class P>
 tlwe<P, 1> sample_extract_index(trlwe<P> &in, size_t k)
 {
-    size_t N = P::N;
+    constexpr size_t N = P::N;
     tlwe<P, 1> out = tlwe<P, 1>();
 
     out.text = in.text[k];
     for (size_t i = 0; i < N; i++)
-    {
         if (i <= k)
-        {
             out.a[i] = in.a[k - i];
-        }
         else
-        {
             out.a[i] = -in.a[N + k - i];
-        }
-    }
     return out;
 }
 

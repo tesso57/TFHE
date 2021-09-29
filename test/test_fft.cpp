@@ -53,7 +53,7 @@ int main()
         for (size_t i = 0; i < P::N; i++)
         {
             cout << res[i] << endl;
-            if (abs((int64_t)res[i] - (int64_t)ans[i]) > 50000)
+            if (abs((int64_t)res[i] - (int64_t)ans[i]) > 10000)
             {
                 ok = false;
                 break;

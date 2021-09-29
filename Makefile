@@ -1,5 +1,8 @@
 CC := g++-10
 CXXFLAGS=-std=c++20 -Wall -Wextra -pedantic   -g3 
+DEBUGFLAGS=-std=c++20 -Wall -Wextra -pedantic   -g3 
+TUNE=-std=c++20 -O2 -march=native -mssse3 -mfpmath=sse -fexcess-precision=fast -pipe
+CXXFLAGS:=$(TUNE)
 INC= -I ./include/
 SRCROOT:= ./src
 SRCDIRS := $(shell find $(SRCROOT) -type d)
@@ -8,10 +11,7 @@ OBJS:=$(SRCS:.cpp=.o)
 OBJSDIR:=./obj
 TESTOBJS:=$(filter-out ./src/main.o,$(OBJS))
 .PHONY: all
-all : test main
-
-main : $(OBJS)
-	$(CC) -o $@.out $(addprefix $(OBJSDIR)/,$(notdir $^))
+all : test
 
 .cpp.o:
 	$(CC) $(CXXFLAGS) -c $< $(INC) -o $(addprefix $(OBJSDIR)/,$(notdir $(<:.cpp=.o)))
@@ -38,4 +38,4 @@ test_fft : $(TESTOBJS) ./test/test_fft.o
 	$(CC)  $(CXXFLAGS) -o test_fft.out $(addprefix $(OBJSDIR)/,$(notdir $^))
 
 .PHONY: test
-test : test_tlwe test_trlwe test_trgsw test_gatebootstrapping test_identitykeyswitching test_homo_nand test_fft
+test : test_tlwe test_trlwe test_trgsw test_gatebootstrapping test_identitykeyswitching test_hom_nand test_fft

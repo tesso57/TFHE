@@ -5,8 +5,9 @@
 template <class P>
 key_switching_key<P>::key_switching_key(std::random_device &engine, secret_key<P> key)
 {
-    data = std::vector<tlwe<P, 0>>(P::N * P::t * ((1 << P::basebit) - 1));
-    size_t N = P::N, t = P::t, basebit = P::basebit, base = (1 << basebit);
+    constexpr size_t size = P::N * P::t * ((1 << P::basebit) - 1);
+    data = std::vector<tlwe<P, 0>>(size);
+    constexpr size_t N = P::N, t = P::t, basebit = P::basebit, base = (1 << basebit);
     for (size_t i = 0; i < N; i++)
     {
         for (size_t j = 0; j < t; j++)
@@ -23,15 +24,13 @@ key_switching_key<P>::key_switching_key(std::random_device &engine, secret_key<P
 template <class P>
 tlwe<P, 0> identity_key_switch(tlwe<P, 1> &src, key_switching_key<P> &ks)
 {
-    size_t n = P::n, N = P::N, basebit = P::basebit, t = P::t, base = (1 << basebit);
+    constexpr size_t n = P::n, N = P::N, basebit = P::basebit, t = P::t, base = (1 << basebit);
     tlwe<P, 0> out = tlwe<P, 0>();
     out.text = src.text;
     for (size_t i = 0; i < n; i++)
-    {
         out.a[i] = 0;
-    }
 
-    size_t prec_offset = 1u << (32 - (1 + basebit * t));
+    constexpr size_t prec_offset = 1u << (32 - (1 + basebit * t));
     for (size_t i = 0; i < N; i++)
     {
         size_t abar = src.a[i] + prec_offset;

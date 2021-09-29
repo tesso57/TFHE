@@ -5,12 +5,12 @@
 template <class P>
 trgsw<P> trgsw<P>::encrypt(poly<P> mu, secret_key<P> &key, std::random_device &engine)
 {
-    size_t N = P::N, l = P::l, Bgbit = P::Bgbit, i, j;
+    constexpr size_t N = P::N, l = P::l, Bgbit = P::Bgbit;
     trgsw<P> instance;
     for (auto &v : instance.data)
         v = trlwe<P>::encrypt_zero(key, engine);
-    for (i = 0; i < l; i++)
-        for (j = 0; j < N; j++)
+    for (size_t i = 0; i < l; i++)
+        for (size_t j = 0; j < N; j++)
         {
             torus t = static_cast<torus>(mu[j]) * (1u << (32 - (i + 1) * Bgbit));
             instance.data[i].a[j] += t;
@@ -37,21 +37,20 @@ trlwe<P> trgsw<P>::external_product(trgsw<P> C, trlwe<P> in)
     trlwe<P>::decompose(dec_a, in.a);
     trlwe<P>::decompose(dec_text, in.text);
     trlwe<P> instance;
-    size_t i, j;
     torus_poly<P> tmp;
-    for (i = 0; i < P::l; i++)
+    for (size_t i = 0; i < P::l; i++)
     {
         polymult_fft<P>(tmp, dec_a[i], C.data[i].a);
-        for (j = 0; j < P::N; j++)
+        for (size_t j = 0; j < P::N; j++)
             instance.a[j] += tmp[j];
         polymult_fft<P>(tmp, dec_text[i], C.data[P::l + i].a);
-        for (j = 0; j < P::N; j++)
+        for (size_t j = 0; j < P::N; j++)
             instance.a[j] += tmp[j];
         polymult_fft<P>(tmp, dec_a[i], C.data[i].text);
-        for (j = 0; j < P::N; j++)
+        for (size_t j = 0; j < P::N; j++)
             instance.text[j] += tmp[j];
         polymult_fft<P>(tmp, dec_text[i], C.data[P::l + i].text);
-        for (j = 0; j < P::N; j++)
+        for (size_t j = 0; j < P::N; j++)
             instance.text[j] += tmp[j];
     }
     return instance;

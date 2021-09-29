@@ -10,8 +10,8 @@
 template <class P>
 tlwe<P, 0> homo_nand(tlwe<P, 0> &lhs, tlwe<P, 0> &rhs, bootstrapping_key<P> &bkey, key_switching_key<P> &ks)
 {
-    size_t n = P::n;
-    torus mu = 1u << 29;
+    constexpr size_t n = P::n;
+    constexpr torus mu = 1u << 29;
 
     tlwe<P, 0> input = tlwe<P, 0>();
     for (size_t i = 0; i < n; i++)

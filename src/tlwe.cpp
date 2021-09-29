@@ -1,10 +1,7 @@
 #include <random>
 #include <array>
-#include <iostream>
-#include "util.hpp"
-#include "tlwe.hpp"
-#include "params.hpp"
 #include "key.hpp"
+#include "tlwe.hpp"
 
 // P : params
 template <class P, int level>
@@ -38,8 +35,8 @@ tlwe<P, level> tlwe<P, level>::encrypt(torus text, secret_key<P> &key, std::rand
     while (it_a != instance.a.end() && it_s != s.end())
     {
         text += (*it_a) * (*it_s);
-        it_s++;
-        it_a++;
+        ++it_s;
+        ++it_a;
     }
 
     instance.text = text;
@@ -49,7 +46,7 @@ tlwe<P, level> tlwe<P, level>::encrypt(torus text, secret_key<P> &key, std::rand
 template <class P, int level>
 tlwe<P, level> tlwe<P, level>::encrypt_bool(bool text, secret_key<P> &key, std::random_device &engine)
 {
-    const torus mu = 1u << 29;
+    constexpr torus mu = 1u << 29;
     return encrypt(text ? mu : -mu, key, engine);
 }
 
@@ -63,10 +60,9 @@ torus tlwe<P, level>::decrypt(secret_key<P> &key)
     while (it_a != a.end() && it_s != s.end())
     {
         deciphertext -= (*it_a) * (*it_s);
-        it_s++;
-        it_a++;
+        ++it_s;
+        ++it_a;
     }
-
     return deciphertext;
 }
 
