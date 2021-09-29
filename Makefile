@@ -14,6 +14,7 @@ TESTOBJS:=$(filter-out ./src/main.o,$(OBJS))
 all : test
 
 .cpp.o:
+	-mkdir -p $(OBJSDIR)
 	$(CC) $(CXXFLAGS) -c $< $(INC) -o $(addprefix $(OBJSDIR)/,$(notdir $(<:.cpp=.o)))
 
 test_tlwe : $(TESTOBJS) ./test/test_tlwe.o
