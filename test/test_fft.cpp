@@ -18,19 +18,19 @@ int main()
 {
     using P = Test;
     std::random_device engine;
-    {
-        cout << "fft test" << endl;
-        auto res = array<torus, P::N>();
-        auto ans = array<torus, P::N>();
-        for (torus i = 0; i < P::N; i++)
-        {
-            ans[i] = torus_uniform_dist_val(engine);
-        }
-        std::array<double, P::N> ffta;
-        FFT<P>(ffta, ans);
-        IFFT<P>(res, ffta);
-        cout << (res == ans ? "Yes" : "No") << endl;
-    }
+    // {
+    //     cout << "fft test" << endl;
+    //     auto res = array<torus, P::N>();
+    //     auto ans = array<torus, P::N>();
+    //     for (torus i = 0; i < P::N; i++)
+    //     {
+    //         ans[i] = torus_uniform_dist_val(engine);
+    //     }
+    //     std::array<double, P::N> ffta;
+    //     FFT<P>(ffta, ans);
+    //     IFFT<P>(res, ffta);
+    //     cout << (res == ans ? "Yes" : "No") << endl;
+    // }
 
     {
         cout << "polymult test" << endl;
@@ -52,7 +52,7 @@ int main()
         bool ok = true;
         for (size_t i = 0; i < P::N; i++)
         {
-            cout << res[i] << endl;
+            // cout << res[i] << endl;
             if (abs((int64_t)res[i] - (int64_t)ans[i]) > 10000)
             {
                 ok = false;

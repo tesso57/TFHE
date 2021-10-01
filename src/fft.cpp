@@ -5,6 +5,31 @@
 #include <array>
 #include <cmath>
 #include <string>
+
+template <size_t N>
+constexpr std::array<double, 2 * N> make_table()
+{
+    std::array<double, 2 * N> ret;
+    for (size_t i = 0; i < N; i++)
+    {
+        ret[i] = cos(2 * i * M_PI / N);
+        ret[i + N] = sin(2 * i * M_PI / N);
+    }
+    return ret;
+}
+
+template <size_t N>
+constexpr std::array<double, N> make_weight()
+{
+    std::array<double, N> ret;
+    for (size_t i = 0; i < N / 2; i++)
+    {
+        ret[i] = cos(i * M_PI / N);
+        ret[i + N / 2] = sin(i * M_PI / N);
+    }
+    return ret;
+}
+
 template <size_t Nbit, bool inverse>
 inline void butterflyAdd(double *const a, double *const b, double rre, double rim)
 {
@@ -47,71 +72,77 @@ inline void butterflyAdd(double *const a, double *const b, double rre, double ri
     }
 }
 
-template <size_t Nbit>
-inline void fft(double *const res, size_t step)
+template <size_t Nbit, size_t NN>
+inline void fft(double *const res, const std::array<double, NN> &table)
 {
-    uint32_t size = 1 << (Nbit - step);
-    double *const res0 = &res[0];
-    double *const res1 = &res[size / 2];
-    for (size_t i = 0; i < size / 2; i++)
+    constexpr size_t N = (1 << Nbit);
+    for (size_t e = 1; e <= Nbit; e++)
     {
-        butterflyAdd<Nbit, false>(res0 + i, res1 + i, std::cos(-2. * M_PI * i / static_cast<double>(size)), std::sin(-2. * M_PI * i / static_cast<double>(size)));
-    }
-
-    if (size > 2)
-    {
-        fft<Nbit>(res0, step + 1);
-        fft<Nbit>(res1, step + 1);
+        size_t half = 1 << (Nbit - e);
+        size_t top = 1 << (Nbit - e + 1);
+        for (size_t base = 0; base < N; base += top)
+        {
+            for (size_t i = base; i < base + half; i++)
+            {
+                size_t diff = i - base;
+                butterflyAdd<Nbit, false>(&res[i], &res[i + half], table[diff * (1 << (e - 1))], table[diff * (1 << (e - 1)) + N]);
+            }
+        }
     }
 }
 template <class P>
-inline void FFT(std::array<double, P::N> &res, std::array<torus, P::N> &a)
+inline void FFT(std::array<double, P::N> &res, std::array<torus, P::N> &a, const std::array<double, P::N> &table)
 {
     constexpr size_t N = P::N, Nbit = P::Nbit;
+    const auto weight = make_weight<P::N>();
     //重みづけ
     for (size_t i = 0; i < N / 2; i++)
     {
         double are = static_cast<double>(static_cast<int32_t>(a[i]));
         double aim = static_cast<double>(static_cast<int32_t>(a[i + N / 2]));
-        double rre = cos(i * M_PI / static_cast<double>(N));
-        double rim = sin(i * M_PI / static_cast<double>(N));
+        double rre = weight[i];
+        double rim = weight[i + N / 2];
         double aimrim = aim * rim;
         double aimrre = aim * rre;
         res[i] = std::fma(are, rre, -aimrim);
         res[i + N / 2] = std::fma(are, rim, aimrre);
     }
-    fft<Nbit - 1>(res.data(), 0);
+    fft<Nbit - 1>(res.data(), table);
 }
-template <uint32_t Nbit>
-inline void ifft(double *const res, size_t step)
+template <uint32_t Nbit, size_t NN>
+inline void ifft(double *const res, const std::array<double, NN> &table)
 {
-    uint32_t size = 1 << (Nbit - step);
-    double *const res0 = &res[0];
-    double *const res1 = &res[size / 2];
-    if (size > 2)
+    constexpr size_t N = (1 << Nbit);
+    for (size_t e = Nbit; e >= 1; e--)
     {
-        ifft<Nbit>(res0, step + 1);
-        ifft<Nbit>(res1, step + 1);
-    }
-    for (size_t i = 0; i < size / 2; i++)
-    {
-        butterflyAdd<Nbit, true>(res0 + i, res1 + i, std::cos(-2. * M_PI * i / static_cast<double>(size)), std::sin(2. * M_PI * i / static_cast<double>(size)));
+        size_t half = 1 << (Nbit - e);
+        size_t top = 1 << (Nbit - e + 1);
+        for (size_t base = 0; base < N; base += top)
+        {
+            for (size_t i = base; i < base + half; i++)
+            {
+                size_t diff = i - base;
+                butterflyAdd<Nbit, true>(&res[i], &res[i + half], table[diff * (1 << (e - 1))], -table[diff * (1 << (e - 1)) + N]);
+            }
+        }
     }
 }
 
 template <class P>
-inline void IFFT(std::array<torus, P::N> &res, std::array<double, P::N> &a)
+inline void IFFT(std::array<torus, P::N> &res, std::array<double, P::N> &a, const std::array<double, P::N> &table)
 {
     constexpr size_t N = P::N, Nbit = P::Nbit;
     constexpr double power = (1ull << 32);
-    ifft<Nbit - 1>(a.data(), 0);
+    const auto weight = make_weight<P::N>();
+
+    ifft<Nbit - 1>(a.data(), table);
     //重みづけ
     for (size_t i = 0; i < N / 2; i++)
     {
         double are = a[i];
         double aim = a[i + N / 2];
-        double rre = cos(i * M_PI / N);
-        double rim = -sin(i * M_PI / N);
+        double rre = weight[i];
+        double rim = -weight[i + N / 2];
         res[i] = static_cast<uint32_t>(std::fmod(std::round(std::fma(are, rre, -aim * rim) * (2.0 / N)), power));
         res[i + N / 2] = static_cast<uint32_t>(std::fmod(std::round(std::fma(are, rim, aim * rre) * (2.0 / N)), power));
     }
@@ -134,16 +165,17 @@ template <class P>
 inline void polymult_fft(std::array<torus, P::N> &res, std::array<torus, P::N> &a, std::array<torus, P::N> &b)
 {
     constexpr size_t N = P::N;
+    constexpr auto table = make_table<N / 2>();
     std::array<double, N> ffta, fftb, tmp;
-    FFT<P>(ffta, a);
-    FFT<P>(fftb, b);
+    FFT<P>(ffta, a, table);
+    FFT<P>(fftb, b, table);
     mul_in_fd(tmp, ffta, fftb);
-    IFFT<P>(res, tmp);
+    IFFT<P>(res, tmp, table);
 }
 
 template void polymult_fft<Test>(std::array<torus, Test::N> &res, std::array<torus, Test::N> &a, std::array<torus, Test::N> &b);
 template void polymult_fft<CASE1>(std::array<torus, CASE1::N> &res, std::array<torus, CASE1::N> &a, std::array<torus, CASE1::N> &b);
 
-template void IFFT<Test>(std::array<torus, Test::N> &res, std::array<double, Test::N> &a);
+template void IFFT<Test>(std::array<torus, Test::N> &res, std::array<double, Test::N> &a, const std::array<double, Test::N> &table);
 
-template void FFT<Test>(std::array<double, Test::N> &res, std::array<torus, Test::N> &a);
+template void FFT<Test>(std::array<double, Test::N> &res, std::array<torus, Test::N> &a, const std::array<double, Test::N> &table);

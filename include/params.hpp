@@ -8,7 +8,7 @@ struct Test
     static constexpr uint32_t n = 630;
     static constexpr double alpha = 0.0;
     //TRLWE params
-    static constexpr uint32_t Nbit = 4;
+    static constexpr uint32_t Nbit = 10;
     static constexpr uint32_t N = 1 << Nbit;
     //TRGSW params
     static constexpr uint32_t l = 3;
