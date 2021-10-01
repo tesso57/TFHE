@@ -20,6 +20,10 @@ C++20に対応したコンパイラが必要。
    - Implementation of FFT without Boost
    - generate keys :  20.886 sec
    - Calculation : 4.494 sec
+4. [b876fe7b91339adc41a79c0bc3733d757f26089d](https://github.com/tesso57/TFHE/commit/b876fe7b91339adc41a79c0bc3733d757f26089d)
+   - Implement iterative FFT (radix-2), pre-compute nth root of 1
+   - generate keys : 18.193 sec 
+   - Calculation : 0.413 sec
 ### MACHINE INFO 
 
 - CPU : AMD Ryzen 7 3800XT 8-Core Processor 3.89 GHz
